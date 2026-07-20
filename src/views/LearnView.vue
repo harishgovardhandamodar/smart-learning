@@ -46,7 +46,6 @@
               :concepts="mindMaps.get(index)"
               :question="findUserQuestion(index)"
               :topic-icon="topic.icon"
-              :center-label="topic.title"
             />
             <div
               v-else-if="msg.role === 'assistant' && msg.content && mindMapLoading.get(index)"

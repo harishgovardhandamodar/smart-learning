@@ -177,7 +177,6 @@ const props = defineProps({
   concepts: { type: Array, default: () => [] },
   question: { type: String, default: '' },
   topicIcon: { type: String, default: '💡' },
-  centerLabel: { type: String, default: 'Topic' },
 })
 
 const BRANCH_COLORS = [
@@ -185,6 +184,36 @@ const BRANCH_COLORS = [
   '#FD79A8', '#FDCB6E', '#00CEC9', '#A29BFE',
 ]
 const BRANCH_ICONS = ['💡', '⚡', '🔬', '🔗', '🌟', '🎯', '🔑', '📌']
+
+const STOP_WORDS = new Set([
+  'what', 'why', 'how', 'when', 'where', 'who', 'which', 'is', 'are',
+  'do', 'does', 'did', 'can', 'could', 'would', 'should', 'will',
+  'the', 'a', 'an', 'to', 'in', 'of', 'for', 'on', 'at', 'by',
+  'with', 'from', 'about', 'into', 'through', 'during', 'before',
+  'after', 'above', 'below', 'between', 'tell', 'explain', 'make',
+  'made', 'become', 'work', 'works', 'this', 'that', 'it', 'i',
+  'me', 'my', 'we', 'you', 'your', 'they', 'them', 'and', 'or',
+  'but', 'not', 'no', 'so', 'if', 'then', 'than', 'just',
+  'also', 'very', 'really', 'some', 'any', 'all', 'each', 'every',
+  'get', 'got', 'has', 'have', 'had', 'was', 'were', 'been', 'being',
+])
+
+function extractTopicFromQuestion(q) {
+  if (!q) return 'Topic'
+  const cleaned = q.replace(/[?!.,;:'"()]/g, ' ').replace(/\s+/g, ' ').trim()
+  const words = cleaned.split(' ')
+
+  const meaningful = words.filter(w => {
+    const lower = w.toLowerCase()
+    return lower.length > 2 && !STOP_WORDS.has(lower)
+  })
+
+  if (meaningful.length === 0) return truncate(words[words.length - 1] || 'Topic', 18)
+
+  const phrase = meaningful.slice(0, 4).join(' ')
+  const capitalized = phrase.charAt(0).toUpperCase() + phrase.slice(1)
+  return truncate(capitalized, 22)
+}
 
 const visible = ref(false)
 const canvasRef = ref(null)
@@ -214,7 +243,7 @@ function computeLayout() {
   const newNodes = {}
 
   // center
-  newNodes['center'] = { id: 'center', x: cx, y: cy, r: centerR, label: truncate(props.centerLabel, 18), icon: props.topicIcon, type: 'center' }
+  newNodes['center'] = { id: 'center', x: cx, y: cy, r: centerR, label: extractTopicFromQuestion(props.question), icon: props.topicIcon, type: 'center' }
   placed.push({ x: cx, y: cy, w: centerR * 2, h: centerR * 2 })
 
   const branchR = Math.min(svgW.value, svgH.value) * 0.30
