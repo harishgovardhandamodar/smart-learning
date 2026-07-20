@@ -27,20 +27,35 @@
             </div>
           </div>
 
-          <div
-            v-for="(msg, index) in messages"
-            :key="index"
-            class="message"
-            :class="msg.role"
-          >
-            <div class="message-avatar">
-              {{ msg.role === 'user' ? '🧑‍🎓' : topic.icon }}
+          <template v-for="(msg, index) in messages" :key="index">
+            <div
+              class="message"
+              :class="msg.role"
+            >
+              <div class="message-avatar">
+                {{ msg.role === 'user' ? '🧑‍🎓' : topic.icon }}
+              </div>
+              <div class="message-content">
+                <div class="message-sender">{{ msg.role === 'user' ? 'You' : 'AI Tutor' }}</div>
+                <div class="message-text" v-html="renderMarkdown(msg.content)"></div>
+              </div>
             </div>
-            <div class="message-content">
-              <div class="message-sender">{{ msg.role === 'user' ? 'You' : 'AI Tutor' }}</div>
-              <div class="message-text" v-html="renderMarkdown(msg.content)"></div>
+
+            <MindMap
+              v-if="msg.role === 'assistant' && msg.content && mindMaps[index]"
+              :concepts="mindMaps[index]"
+              :question="findUserQuestion(index)"
+              :topic-icon="topic.icon"
+              :center-label="topic.title"
+            />
+            <div
+              v-else-if="msg.role === 'assistant' && msg.content && mindMapLoading[index]"
+              class="mindmap-loading"
+            >
+              <span class="loading-spinner"></span>
+              Generating mind map...
             </div>
-          </div>
+          </template>
 
           <div v-if="isLoading" class="message assistant">
             <div class="message-avatar">{{ topic.icon }}</div>
@@ -90,10 +105,11 @@
 </template>
 
 <script setup>
-import { ref, computed, nextTick, watch, onMounted, inject } from 'vue'
+import { ref, computed, nextTick, onMounted, inject } from 'vue'
 import { useRoute } from 'vue-router'
 import { STEM_TOPICS } from '../data/topics'
-import { sendMessage as ollamaSend, getModels, getDefaultModel } from '../services/ollama'
+import { sendMessage as ollamaSend, generateMindMap, getModels, getDefaultModel } from '../services/ollama'
+import MindMap from '../components/MindMap.vue'
 
 const route = useRoute()
 const connected = inject('isConnected', ref(false))
@@ -108,6 +124,9 @@ const messagesContainer = ref(null)
 const inputField = ref(null)
 const selectedModel = ref('')
 const models = ref([])
+
+const mindMaps = ref({})
+const mindMapLoading = ref({})
 
 const suggestions = computed(() => {
   const subs = topic.value.subtopics
@@ -130,10 +149,36 @@ function renderMarkdown(text) {
     .replace(/\n/g, '<br>')
 }
 
+function findUserQuestion(assistantIndex) {
+  for (let i = assistantIndex - 1; i >= 0; i--) {
+    if (messages.value[i].role === 'user') return messages.value[i].content
+  }
+  return ''
+}
+
 async function scrollToBottom() {
   await nextTick()
   if (messagesContainer.value) {
     messagesContainer.value.scrollTop = messagesContainer.value.scrollHeight
+  }
+}
+
+async function fetchMindMap(msgIndex) {
+  const assistantMsg = messages.value[msgIndex]
+  const userMsg = findUserQuestion(msgIndex)
+  if (!userMsg || !assistantMsg.content) return
+
+  mindMapLoading.value[msgIndex] = true
+  try {
+    const concepts = await generateMindMap(userMsg, assistantMsg.content, selectedModel.value)
+    if (concepts && concepts.length > 0) {
+      mindMaps.value[msgIndex] = concepts
+    }
+  } catch {
+    // Silently fail - mind map is optional
+  } finally {
+    delete mindMapLoading.value[msgIndex]
+    await scrollToBottom()
   }
 }
 
@@ -155,12 +200,15 @@ async function sendMessage(text) {
     const stream = await ollamaSend(chatMessages, topicId.value, selectedModel.value)
     let assistantContent = ''
     messages.value.push({ role: 'assistant', content: '' })
+    const msgIndex = messages.value.length - 1
 
     for await (const part of stream) {
       assistantContent += part.message.content
-      messages.value[messages.value.length - 1].content = assistantContent
+      messages.value[msgIndex].content = assistantContent
       await scrollToBottom()
     }
+
+    fetchMindMap(msgIndex)
   } catch (error) {
     messages.value.push({
       role: 'assistant',
@@ -512,5 +560,30 @@ onMounted(() => {
   .empty-state h2 {
     font-size: 1.3rem;
   }
+}
+
+.mindmap-loading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  margin-left: 52px;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-family: var(--font-display);
+  font-weight: 500;
+}
+
+.loading-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2.5px solid rgba(108, 92, 231, 0.15);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
 </style>

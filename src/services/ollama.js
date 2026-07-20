@@ -62,6 +62,18 @@ You must respond with ONLY a valid JSON array of exactly 5 objects. Each object 
 Do NOT include any text outside the JSON array. No markdown, no code blocks. Just pure JSON.
 Make questions age-appropriate, fun, and educational. Use emojis in the questions and explanations.`
 
+const MINDMAP_SYSTEM_PROMPT = `You are a learning assistant that extracts key concepts from an explanation.
+Given a user question and the AI tutor's response, extract the key concepts for a mind map.
+
+You must respond with ONLY a valid JSON array. Each object has:
+- "concept": short concept name (2-4 words)
+- "icon": a single emoji that represents this concept
+- "detail": one-sentence explanation (max 60 chars)
+- "keywords": array of 2-4 short keywords or sub-concepts
+
+Extract 3-6 key concepts. Make them educational and clear.
+Do NOT include any text outside the JSON array. No markdown, no code blocks. Just pure JSON.`
+
 export async function sendMessage(messages, topic, model) {
   const systemPrompt = TOPIC_SYSTEM_PROMPTS[topic] || TOPIC_SYSTEM_PROMPTS.science
   const selectedModel = model || getDefaultModel()
@@ -108,5 +120,27 @@ export async function generateQuiz(topic, model) {
     return JSON.parse(content)
   } catch {
     return null
+  }
+}
+
+export async function generateMindMap(question, responseText, model) {
+  const selectedModel = model || getDefaultModel()
+
+  const res = await ollama.chat({
+    model: selectedModel,
+    messages: [
+      { role: 'system', content: MINDMAP_SYSTEM_PROMPT },
+      { role: 'user', content: `Question: "${question}"\n\nResponse:\n"${responseText.slice(0, 1500)}"\n\nExtract key concepts as JSON.` },
+    ],
+  })
+
+  let content = res.message.content.trim()
+  const jsonMatch = content.match(/\[[\s\S]*\]/)
+  if (jsonMatch) content = jsonMatch[0]
+
+  try {
+    return JSON.parse(content)
+  } catch {
+    return []
   }
 }
