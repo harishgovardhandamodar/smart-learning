@@ -62,17 +62,75 @@ You must respond with ONLY a valid JSON array of exactly 5 objects. Each object 
 Do NOT include any text outside the JSON array. No markdown, no code blocks. Just pure JSON.
 Make questions age-appropriate, fun, and educational. Use emojis in the questions and explanations.`
 
-const MINDMAP_SYSTEM_PROMPT = `You are a learning assistant that extracts key concepts from an explanation.
-Given a user question and the AI tutor's response, extract the key concepts for a mind map.
+const CONCEPT_ICONS = ['💡', '⚡', '🔬', '🔗', '🌟', '🎯', '🔑', '📌', '✨', '🧩', '📐', '🚀']
 
-You must respond with ONLY a valid JSON array. Each object has:
-- "concept": short concept name (2-4 words)
-- "icon": a single emoji that represents this concept
-- "detail": one-sentence explanation (max 60 chars)
-- "keywords": array of 2-4 short keywords or sub-concepts
+export function extractConceptsLocally(question, responseText) {
+  if (!responseText || responseText.length < 20) return []
 
-Extract 3-6 key concepts. Make them educational and clear.
-Do NOT include any text outside the JSON array. No markdown, no code blocks. Just pure JSON.`
+  const sentences = responseText
+    .replace(/\*\*/g, '')
+    .replace(/`[^`]+`/g, '')
+    .split(/[.!?]+/)
+    .map(s => s.trim())
+    .filter(s => s.length > 15 && s.length < 120)
+
+  const boldMatches = [...responseText.matchAll(/\*\*(.+?)\*\*/g)].map(m => m[1])
+  const emojiLineMatches = [...responseText.matchAll(/([^\n]*[\u{1F300}-\u{1FAFF}][^\n]*)/gu)].map(m => m[1].trim())
+
+  const keywords = new Set()
+  const techWords = responseText.match(/\b[A-Z][a-z]+(?:\s+[a-z]+)*\b/g) || []
+  techWords.slice(0, 10).forEach(w => keywords.add(w))
+
+  const concepts = []
+  const usedSentences = new Set()
+
+  for (const bold of boldMatches.slice(0, 4)) {
+    const matchingSentence = sentences.find(s =>
+      s.toLowerCase().includes(bold.toLowerCase()) && !usedSentences.has(s)
+    )
+    if (matchingSentence) {
+      usedSentences.add(matchingSentence)
+      concepts.push({
+        concept: bold.slice(0, 30),
+        icon: CONCEPT_ICONS[concepts.length % CONCEPT_ICONS.length],
+        detail: matchingSentence.slice(0, 80),
+        keywords: [...keywords].slice(concepts.length * 2, concepts.length * 2 + 3),
+      })
+    } else {
+      concepts.push({
+        concept: bold.slice(0, 30),
+        icon: CONCEPT_ICONS[concepts.length % CONCEPT_ICONS.length],
+        detail: bold,
+        keywords: [...keywords].slice(0, 2),
+      })
+    }
+  }
+
+  if (concepts.length < 3) {
+    for (const sent of sentences) {
+      if (concepts.length >= 5) break
+      if (usedSentences.has(sent)) continue
+      const words = sent.split(/\s+/)
+      const shortLabel = words.slice(0, 4).join(' ')
+      if (shortLabel.length > 5) {
+        usedSentences.add(sent)
+        concepts.push({
+          concept: shortLabel.charAt(0).toUpperCase() + shortLabel.slice(1),
+          icon: CONCEPT_ICONS[concepts.length % CONCEPT_ICONS.length],
+          detail: sent.slice(0, 80),
+          keywords: words.slice(4, 8).filter(w => w.length > 3),
+        })
+      }
+    }
+  }
+
+  const topicWords = question.split(/\s+/).filter(w => w.length > 3 && !['what', 'tell', 'about', 'does', 'how', 'why', 'explain'].includes(w.toLowerCase()))
+  if (concepts.length > 0 && topicWords.length > 0) {
+    concepts[0].keywords = [...new Set([...(concepts[0].keywords || []), ...topicWords.slice(0, 3)])]
+  }
+
+  return concepts.slice(0, 6)
+}
 
 export async function sendMessage(messages, topic, model) {
   const systemPrompt = TOPIC_SYSTEM_PROMPTS[topic] || TOPIC_SYSTEM_PROMPTS.science
@@ -123,24 +181,6 @@ export async function generateQuiz(topic, model) {
   }
 }
 
-export async function generateMindMap(question, responseText, model) {
-  const selectedModel = model || getDefaultModel()
-
-  const res = await ollama.chat({
-    model: selectedModel,
-    messages: [
-      { role: 'system', content: MINDMAP_SYSTEM_PROMPT },
-      { role: 'user', content: `Question: "${question}"\n\nResponse:\n"${responseText.slice(0, 1500)}"\n\nExtract key concepts as JSON.` },
-    ],
-  })
-
-  let content = res.message.content.trim()
-  const jsonMatch = content.match(/\[[\s\S]*\]/)
-  if (jsonMatch) content = jsonMatch[0]
-
-  try {
-    return JSON.parse(content)
-  } catch {
-    return []
-  }
+export function generateMindMap(question, responseText) {
+  return extractConceptsLocally(question, responseText)
 }

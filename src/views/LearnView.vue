@@ -169,8 +169,10 @@ async function fetchMindMap(msgIndex) {
   if (!userMsg || !assistantMsg.content) return
 
   mindMapLoading.value.set(msgIndex, true)
+  await nextTick()
+
   try {
-    const concepts = await generateMindMap(userMsg, assistantMsg.content, selectedModel.value)
+    const concepts = generateMindMap(userMsg, assistantMsg.content)
     if (concepts && concepts.length > 0) {
       mindMaps.value.set(msgIndex, concepts)
     }
