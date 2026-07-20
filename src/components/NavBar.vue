@@ -28,28 +28,18 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted, provide } from 'vue'
-import { checkConnection } from '../services/ollama'
+import { ref, inject, onMounted, onUnmounted } from 'vue'
 
-const isConnected = ref(false)
+const isConnected = inject('isConnected')
 const isScrolled = ref(false)
-
-provide('isConnected', isConnected)
-
-async function checkStatus() {
-  isConnected.value = await checkConnection()
-}
 
 function handleScroll() {
   isScrolled.value = window.scrollY > 10
 }
 
 onMounted(() => {
-  checkStatus()
   window.addEventListener('scroll', handleScroll)
-  const interval = setInterval(checkStatus, 15000)
   onUnmounted(() => {
-    clearInterval(interval)
     window.removeEventListener('scroll', handleScroll)
   })
 })

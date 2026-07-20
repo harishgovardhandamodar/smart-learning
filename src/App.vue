@@ -13,8 +13,23 @@
 </template>
 
 <script setup>
+import { ref, onMounted, onUnmounted, provide } from 'vue'
+import { checkConnection } from './services/ollama'
 import NavBar from './components/NavBar.vue'
 import FooterBar from './components/FooterBar.vue'
+
+const isConnected = ref(false)
+provide('isConnected', isConnected)
+
+async function checkStatus() {
+  isConnected.value = await checkConnection()
+}
+
+onMounted(() => {
+  checkStatus()
+  const interval = setInterval(checkStatus, 15000)
+  onUnmounted(() => clearInterval(interval))
+})
 </script>
 
 <style scoped>

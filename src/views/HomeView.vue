@@ -117,7 +117,7 @@
 import { inject } from 'vue'
 import { STEM_TOPICS } from '../data/topics'
 
-const connected = inject('isConnected', false)
+const connected = inject('isConnected')
 const topics = STEM_TOPICS
 </script>
 
