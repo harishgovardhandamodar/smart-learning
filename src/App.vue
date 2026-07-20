@@ -1,7 +1,40 @@
+<template>
+  <div id="smart-learning">
+    <NavBar />
+    <main class="main-content">
+      <router-view v-slot="{ Component }">
+        <transition name="page" mode="out-in">
+          <component :is="Component" />
+        </transition>
+      </router-view>
+    </main>
+    <FooterBar />
+  </div>
+</template>
+
 <script setup>
-import HelloWorld from './components/HelloWorld.vue'
+import NavBar from './components/NavBar.vue'
+import FooterBar from './components/FooterBar.vue'
 </script>
 
-<template>
-  <HelloWorld />
-</template>
+<style scoped>
+.main-content {
+  flex: 1;
+  padding-top: 72px;
+}
+
+.page-enter-active,
+.page-leave-active {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.page-enter-from {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.page-leave-to {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+</style>
