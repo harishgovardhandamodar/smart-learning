@@ -42,14 +42,14 @@
             </div>
 
             <MindMap
-              v-if="msg.role === 'assistant' && msg.content && mindMaps[index]"
-              :concepts="mindMaps[index]"
+              v-if="msg.role === 'assistant' && msg.content && mindMaps.get(index)"
+              :concepts="mindMaps.get(index)"
               :question="findUserQuestion(index)"
               :topic-icon="topic.icon"
               :center-label="topic.title"
             />
             <div
-              v-else-if="msg.role === 'assistant' && msg.content && mindMapLoading[index]"
+              v-else-if="msg.role === 'assistant' && msg.content && mindMapLoading.get(index)"
               class="mindmap-loading"
             >
               <span class="loading-spinner"></span>
@@ -125,8 +125,8 @@ const inputField = ref(null)
 const selectedModel = ref('')
 const models = ref([])
 
-const mindMaps = ref({})
-const mindMapLoading = ref({})
+const mindMaps = ref(new Map())
+const mindMapLoading = ref(new Map())
 
 const suggestions = computed(() => {
   const subs = topic.value.subtopics
@@ -168,16 +168,16 @@ async function fetchMindMap(msgIndex) {
   const userMsg = findUserQuestion(msgIndex)
   if (!userMsg || !assistantMsg.content) return
 
-  mindMapLoading.value[msgIndex] = true
+  mindMapLoading.value.set(msgIndex, true)
   try {
     const concepts = await generateMindMap(userMsg, assistantMsg.content, selectedModel.value)
     if (concepts && concepts.length > 0) {
-      mindMaps.value[msgIndex] = concepts
+      mindMaps.value.set(msgIndex, concepts)
     }
-  } catch {
-    // Silently fail - mind map is optional
+  } catch (err) {
+    console.error('Mind map generation failed:', err)
   } finally {
-    delete mindMapLoading.value[msgIndex]
+    mindMapLoading.value.set(msgIndex, false)
     await scrollToBottom()
   }
 }
