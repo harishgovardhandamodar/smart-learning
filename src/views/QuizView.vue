@@ -2,18 +2,18 @@
   <div class="quiz-page">
     <div class="container">
       <div class="quiz-header">
-        <router-link :to="`/learn/${topicId}`" class="back-link">← Back to Learning</router-link>
+        <router-link :to="`/learn/${topicId}`" class="back-link">{{ t('quiz.backToLearning') }}</router-link>
         <div class="topic-badge" :style="{ background: topic.gradient }">
           <span>{{ topic.icon }}</span>
-          <h1>{{ topic.title }} Quiz</h1>
+          <h1>{{ t('quiz.quizTitle')(topic.title) }}</h1>
         </div>
       </div>
 
       <!-- Loading State -->
       <div v-if="isLoading" class="loading-card animate-slide-up">
-        <div class="loading-icon animate-wiggle">{{ topic.icon }}</div>
-        <h2>Generating your quiz...</h2>
-        <p>Our AI is creating fun questions just for you!</p>
+        <div class="loading-icon animate-wiggle">🦊</div>
+        <h2>{{ t('quiz.foxyMakingQuiz') }}</h2>
+        <p>{{ t('quiz.foxyQuizDesc') }}</p>
         <div class="loading-bar">
           <div class="loading-fill"></div>
         </div>
@@ -22,17 +22,17 @@
       <!-- Error State -->
       <div v-else-if="error" class="error-card animate-slide-up">
         <div class="error-icon">😕</div>
-        <h2>Oops! Couldn't generate quiz</h2>
+        <h2>{{ t('quiz.couldntGenerate') }}</h2>
         <p>{{ error }}</p>
-        <button class="btn btn-primary" @click="loadQuiz">Try Again</button>
+        <button class="btn btn-primary" @click="loadQuiz">{{ t('quiz.tryAgain') }}</button>
       </div>
 
       <!-- Quiz Active -->
       <div v-else-if="questions.length > 0 && !quizComplete" class="quiz-body animate-slide-up">
         <div class="quiz-progress">
           <div class="progress-info">
-            <span>Question {{ currentIndex + 1 }} of {{ questions.length }}</span>
-            <span class="score-display">Score: {{ score }}/{{ questions.length }}</span>
+            <span>{{ t('quiz.questionOf')(currentIndex + 1, questions.length) }}</span>
+            <span class="score-display">{{ t('quiz.score')(score, questions.length) }}</span>
           </div>
           <div class="progress-bar">
             <div class="progress-fill" :style="{ width: `${((currentIndex + 1) / questions.length) * 100}%` }"></div>
@@ -66,7 +66,7 @@
           <div v-if="showResult" class="explanation-card animate-slide-up">
             <div class="explanation-header">
               <span>{{ selectedAnswer === questions[currentIndex].correct ? '🎉' : '💡' }}</span>
-              <strong>{{ selectedAnswer === questions[currentIndex].correct ? 'Correct!' : 'Not quite!' }}</strong>
+              <strong>{{ selectedAnswer === questions[currentIndex].correct ? t('quiz.correct') : t('quiz.notQuite') }}</strong>
             </div>
             <p>{{ questions[currentIndex].explanation }}</p>
           </div>
@@ -77,14 +77,14 @@
               class="btn btn-primary"
               @click="checkAnswer"
             >
-              Check Answer
+              {{ t('quiz.checkAnswer') }}
             </button>
             <button
               v-if="showResult"
               class="btn btn-primary"
               @click="nextQuestion"
             >
-              {{ currentIndex < questions.length - 1 ? 'Next Question →' : 'See Results 🏆' }}
+              {{ currentIndex < questions.length - 1 ? t('quiz.nextQuestion') : t('quiz.seeResults') }}
             </button>
           </div>
         </div>
@@ -94,7 +94,7 @@
       <div v-else-if="quizComplete" class="results-card animate-bounce">
         <div class="results-icon">{{ scorePercentage >= 80 ? '🏆' : scorePercentage >= 50 ? '⭐' : '💪' }}</div>
         <h2 class="results-title">
-          {{ scorePercentage >= 80 ? 'Amazing!' : scorePercentage >= 50 ? 'Good Job!' : 'Keep Trying!' }}
+          {{ scorePercentage >= 80 ? t('quiz.amazing') : scorePercentage >= 50 ? t('quiz.goodJob') : t('quiz.keepTrying') }}
         </h2>
         <div class="results-score">
           <span class="score-big">{{ score }}</span>
@@ -103,31 +103,31 @@
         </div>
         <p class="results-message">
           {{ scorePercentage >= 80
-            ? "You're a STEM superstar! Keep up the great work!"
+            ? t('quiz.stemSuperstar')
             : scorePercentage >= 50
-            ? "Nice effort! Review the topics and try again!"
-            : "Don't give up! Every expert was once a beginner!" }}
+            ? t('quiz.niceEffort')
+            : t('quiz.dontGiveUp') }}
         </p>
         <div class="results-actions">
           <router-link :to="`/learn/${topicId}`" class="btn btn-primary">
-            💬 Learn More
+            {{ t('quiz.learnMore') }}
           </router-link>
           <button class="btn btn-secondary" @click="resetQuiz">
-            🔄 Try Again
+            🔄 {{ t('quiz.tryAgain') }}
           </button>
           <router-link to="/topics" class="btn btn-outline">
-            🎯 Other Topics
+            {{ t('quiz.otherTopics') }}
           </router-link>
         </div>
       </div>
 
       <!-- Initial State -->
       <div v-else class="start-card animate-slide-up">
-        <div class="start-icon animate-float">{{ topic.icon }}</div>
-        <h2>Ready for a Challenge?</h2>
-        <p>Test your {{ topic.title.toLowerCase }} knowledge with 5 fun questions generated by AI!</p>
+        <div class="start-icon animate-float">🦊</div>
+        <h2>{{ t('quiz.readyChallenge') }}</h2>
+        <p>{{ t('quiz.foxyPrepared')(topic.title.toLowerCase()) }}</p>
         <button class="btn btn-primary btn-lg" @click="loadQuiz">
-          🚀 Start Quiz
+          {{ t('quiz.startQuiz') }}
         </button>
       </div>
     </div>
@@ -135,12 +135,14 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, inject } from 'vue'
 import { useRoute } from 'vue-router'
 import { STEM_TOPICS } from '../data/topics'
 import { generateQuiz, getModels, getDefaultModel } from '../services/ollama'
 
 const route = useRoute()
+const t = inject('t')
+const locale = inject('locale')
 const topicId = computed(() => route.params.topicId)
 const topic = computed(() => STEM_TOPICS.find(t => t.id === topicId.value) || STEM_TOPICS[0])
 
@@ -166,7 +168,7 @@ async function loadQuiz() {
   try {
     const models = getModels()
     const model = getDefaultModel()
-    const result = await generateQuiz(topicId.value, model)
+    const result = await generateQuiz(topicId.value, model, locale.value)
 
     if (!result || !Array.isArray(result) || result.length === 0) {
       throw new Error('Could not generate valid quiz questions. Please try again.')

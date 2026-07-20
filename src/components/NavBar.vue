@@ -9,18 +9,24 @@
       <div class="nav-links">
         <router-link to="/" class="nav-link" exact-active-class="active">
           <span class="nav-icon">🏠</span>
-          Home
+          {{ t('nav.home') }}
         </router-link>
         <router-link to="/topics" class="nav-link" active-class="active">
           <span class="nav-icon">🎯</span>
-          Topics
+          {{ t('nav.topics') }}
         </router-link>
       </div>
 
-      <div class="nav-status">
+      <div class="nav-actions">
+        <button class="lang-btn" @click="cycleLang" :title="locale === 'en' ? 'Nederlands' : 'English'">
+          {{ locale === 'en' ? '🇳🇱' : '🇬🇧' }}
+        </button>
+        <button class="theme-btn" @click="toggleTheme" :title="isDark ? 'Light mode' : 'Dark mode'">
+          {{ isDark ? '☀️' : '🌙' }}
+        </button>
         <div class="connection-badge" :class="{ connected: isConnected }">
           <span class="status-dot"></span>
-          <span class="status-text">{{ isConnected ? 'Connected' : 'Disconnected' }}</span>
+          <span class="status-text">{{ isConnected ? t('nav.connected') : t('nav.disconnected') }}</span>
         </div>
       </div>
     </div>
@@ -31,7 +37,16 @@
 import { ref, inject, onMounted, onUnmounted } from 'vue'
 
 const isConnected = inject('isConnected')
+const isDark = inject('isDark')
+const toggleTheme = inject('toggleTheme')
+const t = inject('t')
+const setLocale = inject('setLocale')
+const locale = inject('locale')
 const isScrolled = ref(false)
+
+function cycleLang() {
+  setLocale(locale.value === 'en' ? 'nl' : 'en')
+}
 
 function handleScroll() {
   isScrolled.value = window.scrollY > 10
@@ -52,14 +67,14 @@ onMounted(() => {
   left: 0;
   right: 0;
   z-index: 100;
-  background: rgba(255, 255, 255, 0.85);
+  background: var(--nav-bg);
   backdrop-filter: blur(20px);
   border-bottom: 2px solid transparent;
   transition: all 0.3s ease;
 
   &.scrolled {
-    border-bottom-color: rgba(108, 92, 231, 0.1);
-    box-shadow: 0 2px 20px rgba(108, 92, 231, 0.08);
+    border-bottom-color: var(--border);
+    box-shadow: var(--shadow);
   }
 }
 
@@ -115,7 +130,7 @@ onMounted(() => {
   transition: all 0.3s ease;
 
   &:hover {
-    background: rgba(108, 92, 231, 0.08);
+    background: var(--chip-bg);
     color: var(--primary);
     transform: translateY(-1px);
   }
@@ -129,6 +144,29 @@ onMounted(() => {
 
 .nav-icon {
   font-size: 1.1rem;
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.lang-btn, .theme-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: var(--chip-bg);
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+
+  &:hover {
+    transform: scale(1.1);
+    background: var(--border);
+  }
 }
 
 .connection-badge {

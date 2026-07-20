@@ -2,7 +2,7 @@
   <div class="learn-page">
     <div class="container">
       <div class="learn-header">
-        <router-link to="/topics" class="back-link">← Back to Topics</router-link>
+        <router-link to="/topics" class="back-link">{{ t('learn.backToTopics') }}</router-link>
         <div class="topic-badge" :style="{ background: topic.gradient }">
           <span>{{ topic.icon }}</span>
           <h1>{{ topic.title }}</h1>
@@ -12,9 +12,9 @@
       <div class="chat-container">
         <div class="chat-messages" ref="messagesContainer">
           <div v-if="messages.length === 0" class="empty-state animate-bounce">
-            <div class="empty-icon">{{ topic.icon }}</div>
-            <h2>Welcome to {{ topic.title }}!</h2>
-            <p>Ask me anything about {{ topic.title.toLowerCase() }}. I'm your personal AI tutor!</p>
+            <div class="empty-icon">🦊</div>
+            <h2>{{ t('learn.welcome')(topic.title) }}</h2>
+            <p>{{ t('learn.askFoxy')(topic.title.toLowerCase()) }}</p>
             <div class="suggestion-chips">
               <button
                 v-for="suggestion in suggestions"
@@ -28,15 +28,10 @@
           </div>
 
           <template v-for="(msg, index) in messages" :key="index">
-            <div
-              class="message"
-              :class="msg.role"
-            >
-              <div class="message-avatar">
-                {{ msg.role === 'user' ? '🧑‍🎓' : topic.icon }}
-              </div>
+            <div class="message" :class="msg.role">
+              <div class="message-avatar">{{ msg.role === 'user' ? '🧑‍🎓' : '🦊' }}</div>
               <div class="message-content">
-                <div class="message-sender">{{ msg.role === 'user' ? 'You' : 'AI Tutor' }}</div>
+                <div class="message-sender">{{ msg.role === 'user' ? '🧑‍🎓 You' : '🦊 Foxy' }}</div>
                 <div class="message-text" v-html="renderMarkdown(msg.content)"></div>
               </div>
             </div>
@@ -45,39 +40,35 @@
               v-if="msg.role === 'assistant' && msg.content && mindMaps.get(index)"
               :concepts="mindMaps.get(index)"
               :question="findUserQuestion(index)"
-              :topic-icon="topic.icon"
+              :topic-icon="'🦊'"
             />
             <div
               v-else-if="msg.role === 'assistant' && msg.content && mindMapLoading.get(index)"
               class="mindmap-loading"
             >
               <span class="loading-spinner"></span>
-              Generating mind map...
+              {{ t('learn.generatingMindMap') }}
             </div>
           </template>
 
           <div v-if="isLoading" class="message assistant">
-            <div class="message-avatar">{{ topic.icon }}</div>
+            <div class="message-avatar">🦊</div>
             <div class="message-content">
-              <div class="message-sender">AI Tutor</div>
-              <div class="typing-indicator">
-                <span></span><span></span><span></span>
-              </div>
+              <div class="message-sender">🦊 Foxy</div>
+              <div class="typing-indicator"><span></span><span></span><span></span></div>
             </div>
           </div>
         </div>
 
         <div class="chat-input-area">
           <div class="model-selector" v-if="models.length > 0">
-            <label>Model:</label>
+            <label>{{ t('learn.model') }}</label>
             <select v-model="selectedModel" class="model-select">
-              <option v-for="m in models" :key="m.name" :value="m.name">
-                {{ m.name }}
-              </option>
+              <option v-for="m in models" :key="m.name" :value="m.name">{{ m.name }}</option>
             </select>
           </div>
           <div class="no-model-warning" v-if="models.length === 0 && !connected">
-            <span>⚠️ Ollama not connected. Please start <code>ollama serve</code></span>
+            <span>⚠️ {{ t('learn.ollamaWarning') }} <code>ollama serve</code></span>
           </div>
           <form class="chat-form" @submit.prevent="handleSend">
             <input
@@ -85,14 +76,10 @@
               v-model="userInput"
               type="text"
               class="chat-input"
-              :placeholder="`Ask about ${topic.title.toLowerCase()}...`"
+              :placeholder="t('learn.placeholder')(topic.title.toLowerCase())"
               :disabled="isLoading || !connected"
             />
-            <button
-              type="submit"
-              class="send-btn"
-              :disabled="!userInput.trim() || isLoading || !connected"
-            >
+            <button type="submit" class="send-btn" :disabled="!userInput.trim() || isLoading || !connected">
               <span v-if="isLoading">⏳</span>
               <span v-else>🚀</span>
             </button>
@@ -111,7 +98,9 @@ import { sendMessage as ollamaSend, generateMindMap, getModels, getDefaultModel 
 import MindMap from '../components/MindMap.vue'
 
 const route = useRoute()
-const connected = inject('isConnected', ref(false))
+const connected = inject('isConnected')
+const t = inject('t')
+const locale = inject('locale')
 
 const topicId = computed(() => route.params.topicId)
 const topic = computed(() => STEM_TOPICS.find(t => t.id === topicId.value) || STEM_TOPICS[0])
@@ -129,6 +118,14 @@ const mindMapLoading = ref(new Map())
 
 const suggestions = computed(() => {
   const subs = topic.value.subtopics
+  if (locale.value === 'nl') {
+    return [
+      `Vertel me over ${subs[0]}`,
+      `Hoe werkt ${subs[1]}?`,
+      `Waarom is ${subs[2]} belangrijk?`,
+      `Leuke weetjes over ${subs[0]}!`,
+    ]
+  }
   return [
     `Tell me about ${subs[0]}`,
     `How does ${subs[1]} work?`,
@@ -139,9 +136,7 @@ const suggestions = computed(() => {
 
 function renderMarkdown(text) {
   return text
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
     .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
     .replace(/\*(.*?)\*/g, '<em>$1</em>')
     .replace(/`(.*?)`/g, '<code>$1</code>')
@@ -157,9 +152,7 @@ function findUserQuestion(assistantIndex) {
 
 async function scrollToBottom() {
   await nextTick()
-  if (messagesContainer.value) {
-    messagesContainer.value.scrollTop = messagesContainer.value.scrollHeight
-  }
+  if (messagesContainer.value) messagesContainer.value.scrollTop = messagesContainer.value.scrollHeight
 }
 
 async function fetchMindMap(msgIndex) {
@@ -171,10 +164,8 @@ async function fetchMindMap(msgIndex) {
   await nextTick()
 
   try {
-    const concepts = generateMindMap(userMsg, assistantMsg.content)
-    if (concepts && concepts.length > 0) {
-      mindMaps.value.set(msgIndex, concepts)
-    }
+    const concepts = generateMindMap(userMsg, assistantMsg.content, locale.value)
+    if (concepts && concepts.length > 0) mindMaps.value.set(msgIndex, concepts)
   } catch (err) {
     console.error('Mind map generation failed:', err)
   } finally {
@@ -193,12 +184,8 @@ async function sendMessage(text) {
   await scrollToBottom()
 
   try {
-    const chatMessages = messages.value.map(m => ({
-      role: m.role,
-      content: m.content,
-    }))
-
-    const stream = await ollamaSend(chatMessages, topicId.value, selectedModel.value)
+    const chatMessages = messages.value.map(m => ({ role: m.role, content: m.content }))
+    const stream = await ollamaSend(chatMessages, topicId.value, selectedModel.value, locale.value)
     let assistantContent = ''
     messages.value.push({ role: 'assistant', content: '' })
     const msgIndex = messages.value.length - 1
@@ -208,22 +195,16 @@ async function sendMessage(text) {
       messages.value[msgIndex].content = assistantContent
       await scrollToBottom()
     }
-
     fetchMindMap(msgIndex)
   } catch (error) {
-    messages.value.push({
-      role: 'assistant',
-      content: `Oops! Something went wrong. Make sure Ollama is running and you have a model available. Error: ${error.message}`,
-    })
+    messages.value.push({ role: 'assistant', content: `Oops! Something went wrong. Error: ${error.message}` })
   } finally {
     isLoading.value = false
     await scrollToBottom()
   }
 }
 
-function handleSend() {
-  sendMessage()
-}
+function handleSend() { sendMessage() }
 
 onMounted(() => {
   models.value = getModels()
@@ -233,358 +214,78 @@ onMounted(() => {
 </script>
 
 <style scoped lang="scss">
-.learn-page {
-  padding: 20px 0 40px;
-  min-height: calc(100vh - 72px);
-  display: flex;
-}
-
-.container {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-}
-
-.learn-header {
-  margin-bottom: 20px;
-}
-
-.back-link {
-  font-family: var(--font-display);
-  font-weight: 500;
-  font-size: 0.9rem;
-  color: var(--text-light);
-  display: inline-flex;
-  align-items: center;
-  margin-bottom: 12px;
-  transition: color 0.2s;
-
-  &:hover {
-    color: var(--primary);
-  }
-}
+.learn-page { padding: 20px 0 40px; min-height: calc(100vh - 72px); display: flex; }
+.container { width: 100%; display: flex; flex-direction: column; }
+.learn-header { margin-bottom: 20px; }
+.back-link { font-family: var(--font-display); font-weight: 500; font-size: 0.9rem; color: var(--text-light); display: inline-flex; align-items: center; margin-bottom: 12px; transition: color 0.2s; &:hover { color: var(--primary); } }
 
 .topic-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-  padding: 10px 24px 10px 16px;
-  border-radius: 16px;
-  color: white;
-
-  span {
-    font-size: 1.8rem;
-  }
-
-  h1 {
-    font-size: 1.3rem;
-    font-weight: 700;
-  }
+  display: inline-flex; align-items: center; gap: 12px; padding: 10px 24px 10px 16px; border-radius: 16px; color: white;
+  span { font-size: 1.8rem; }
+  h1 { font-size: 1.3rem; font-weight: 700; }
 }
 
-.chat-container {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  background: var(--bg-card);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow);
-  overflow: hidden;
-  min-height: 500px;
-  max-height: calc(100vh - 200px);
-}
+.chat-container { flex: 1; display: flex; flex-direction: column; background: var(--bg-card); border-radius: var(--radius-lg); box-shadow: var(--shadow); overflow: hidden; min-height: 500px; max-height: calc(100vh - 200px); }
+.chat-messages { flex: 1; overflow-y: auto; padding: 24px; display: flex; flex-direction: column; gap: 16px; }
 
-.chat-messages {
-  flex: 1;
-  overflow-y: auto;
-  padding: 24px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
+.empty-state { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 40px 20px; }
+.empty-icon { font-size: 4rem; margin-bottom: 16px; animation: float 3s ease-in-out infinite; }
+.empty-state h2 { font-size: 1.8rem; margin-bottom: 8px; }
+.empty-state p { color: var(--text-light); max-width: 400px; margin-bottom: 24px; }
 
-.empty-state {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 40px 20px;
-}
-
-.empty-icon {
-  font-size: 4rem;
-  margin-bottom: 16px;
-  animation: float 3s ease-in-out infinite;
-}
-
-.empty-state h2 {
-  font-size: 1.8rem;
-  margin-bottom: 8px;
-}
-
-.empty-state p {
-  color: var(--text-light);
-  max-width: 400px;
-  margin-bottom: 24px;
-}
-
-.suggestion-chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  justify-content: center;
-}
-
+.suggestion-chips { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
 .suggestion-chip {
-  background: rgba(108, 92, 231, 0.08);
-  color: var(--primary);
-  padding: 8px 18px;
-  border-radius: 20px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  border: 2px solid transparent;
-  transition: all 0.3s ease;
-
-  &:hover {
-    background: var(--primary);
-    color: white;
-    border-color: var(--primary);
-    transform: translateY(-2px);
-  }
+  background: var(--chip-bg); color: var(--primary); padding: 8px 18px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; border: 2px solid transparent; transition: all 0.3s ease;
+  &:hover { background: var(--primary); color: white; border-color: var(--primary); transform: translateY(-2px); }
 }
 
-.message {
-  display: flex;
-  gap: 12px;
-  max-width: 85%;
-  animation: slide-up 0.3s ease;
+.message { display: flex; gap: 12px; max-width: 85%; animation: slide-up 0.3s ease; &.user { align-self: flex-end; flex-direction: row-reverse; } &.assistant { align-self: flex-start; } }
 
-  &.user {
-    align-self: flex-end;
-    flex-direction: row-reverse;
-  }
-
-  &.assistant {
-    align-self: flex-start;
-  }
-}
-
-.message-avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 12px;
-  background: rgba(108, 92, 231, 0.08);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.3rem;
-  flex-shrink: 0;
-}
-
-.message-sender {
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: 0.8rem;
-  color: var(--text-muted);
-  margin-bottom: 4px;
-}
+.message-avatar { width: 40px; height: 40px; border-radius: 12px; background: var(--chip-bg); display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0; }
+.message-sender { font-family: var(--font-display); font-weight: 600; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 4px; }
 
 .message-content {
-  background: rgba(108, 92, 231, 0.05);
-  padding: 12px 16px;
-  border-radius: 16px;
-  border-top-left-radius: 4px;
-
-  .user & {
-    background: var(--primary);
-    color: white;
-    border-top-left-radius: 16px;
-    border-top-right-radius: 4px;
-  }
+  background: var(--option-bg); padding: 12px 16px; border-radius: 16px; border-top-left-radius: 4px;
+  .user & { background: var(--primary); color: white; border-top-left-radius: 16px; border-top-right-radius: 4px; }
 }
 
 .message-text {
-  font-size: 0.95rem;
-  line-height: 1.6;
-
-  :deep(strong) {
-    font-weight: 700;
-  }
-
-  :deep(code) {
-    background: rgba(108, 92, 231, 0.1);
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-size: 0.85rem;
-  }
-
-  .user & :deep(code) {
-    background: rgba(255, 255, 255, 0.2);
-  }
+  font-size: 0.95rem; line-height: 1.6;
+  :deep(strong) { font-weight: 700; }
+  :deep(code) { background: var(--code-bg); padding: 2px 6px; border-radius: 4px; font-size: 0.85rem; }
+  .user & :deep(code) { background: rgba(255, 255, 255, 0.2); }
 }
 
 .typing-indicator {
-  display: flex;
-  gap: 4px;
-  padding: 4px 0;
-
-  span {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: var(--primary);
-    animation: typing 1.4s ease-in-out infinite;
-
-    &:nth-child(2) { animation-delay: 0.2s; }
-    &:nth-child(3) { animation-delay: 0.4s; }
-  }
+  display: flex; gap: 4px; padding: 4px 0;
+  span { width: 8px; height: 8px; border-radius: 50%; background: var(--primary); animation: typing 1.4s ease-in-out infinite; &:nth-child(2) { animation-delay: 0.2s; } &:nth-child(3) { animation-delay: 0.4s; } }
 }
+@keyframes typing { 0%, 60%, 100% { opacity: 0.3; transform: scale(0.8); } 30% { opacity: 1; transform: scale(1); } }
 
-@keyframes typing {
-  0%, 60%, 100% { opacity: 0.3; transform: scale(0.8); }
-  30% { opacity: 1; transform: scale(1); }
-}
+.chat-input-area { border-top: 2px solid var(--border); padding: 16px 20px; background: var(--option-bg); }
+.model-selector { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; label { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); font-family: var(--font-display); } }
 
-.chat-input-area {
-  border-top: 2px solid rgba(108, 92, 231, 0.08);
-  padding: 16px 20px;
-  background: rgba(108, 92, 231, 0.02);
-}
+.model-select { font-family: var(--font-body); font-size: 0.8rem; padding: 4px 10px; border-radius: 8px; border: 2px solid var(--border); background: var(--input-bg); color: var(--text); outline: none; cursor: pointer; &:focus { border-color: var(--primary); } }
 
-.model-selector {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 10px;
-
-  label {
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: var(--text-muted);
-    font-family: var(--font-display);
-  }
-}
-
-.model-select {
-  font-family: var(--font-body);
-  font-size: 0.8rem;
-  padding: 4px 10px;
-  border-radius: 8px;
-  border: 2px solid rgba(108, 92, 231, 0.15);
-  background: white;
-  color: var(--text);
-  outline: none;
-  cursor: pointer;
-
-  &:focus {
-    border-color: var(--primary);
-  }
-}
-
-.no-model-warning {
-  margin-bottom: 10px;
-  font-size: 0.85rem;
-  color: #E17055;
-
-  code {
-    background: rgba(253, 203, 110, 0.2);
-    padding: 2px 6px;
-    border-radius: 4px;
-  }
-}
-
-.chat-form {
-  display: flex;
-  gap: 10px;
-}
+.no-model-warning { margin-bottom: 10px; font-size: 0.85rem; color: #E17055; code { background: rgba(253, 203, 110, 0.2); padding: 2px 6px; border-radius: 4px; } }
+.chat-form { display: flex; gap: 10px; }
 
 .chat-input {
-  flex: 1;
-  font-family: var(--font-body);
-  font-size: 1rem;
-  padding: 12px 18px;
-  border-radius: 14px;
-  border: 2px solid rgba(108, 92, 231, 0.15);
-  background: white;
-  outline: none;
-  transition: border-color 0.3s;
-
-  &:focus {
-    border-color: var(--primary);
-  }
-
-  &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-
-  &::placeholder {
-    color: var(--text-muted);
-  }
+  flex: 1; font-family: var(--font-body); font-size: 1rem; padding: 12px 18px; border-radius: 14px; border: 2px solid var(--border); background: var(--input-bg); color: var(--text); outline: none; transition: border-color 0.3s;
+  &:focus { border-color: var(--primary); }
+  &:disabled { opacity: 0.5; cursor: not-allowed; }
+  &::placeholder { color: var(--text-muted); }
 }
 
 .send-btn {
-  width: 50px;
-  height: 50px;
-  border-radius: 14px;
-  background: var(--primary);
-  color: white;
-  font-size: 1.3rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 15px rgba(108, 92, 231, 0.3);
-  transition: all 0.3s ease;
-
-  &:hover:not(:disabled) {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(108, 92, 231, 0.4);
-  }
-
-  &:disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
-  }
+  width: 50px; height: 50px; border-radius: 14px; background: var(--primary); color: white; font-size: 1.3rem; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(108, 92, 231, 0.3); transition: all 0.3s ease;
+  &:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(108, 92, 231, 0.4); }
+  &:disabled { opacity: 0.4; cursor: not-allowed; }
 }
 
-@media (max-width: 640px) {
-  .message {
-    max-width: 95%;
-  }
+.mindmap-loading { display: flex; align-items: center; gap: 8px; padding: 8px 16px; margin-left: 52px; font-size: 0.8rem; color: var(--text-muted); font-family: var(--font-display); font-weight: 500; }
+.loading-spinner { width: 16px; height: 16px; border: 2.5px solid rgba(108, 92, 231, 0.15); border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
 
-  .chat-messages {
-    padding: 16px;
-  }
-
-  .empty-state h2 {
-    font-size: 1.3rem;
-  }
-}
-
-.mindmap-loading {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
-  margin-left: 52px;
-  font-size: 0.8rem;
-  color: var(--text-muted);
-  font-family: var(--font-display);
-  font-weight: 500;
-}
-
-.loading-spinner {
-  width: 16px;
-  height: 16px;
-  border: 2.5px solid rgba(108, 92, 231, 0.15);
-  border-top-color: var(--primary);
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
+@media (max-width: 640px) { .message { max-width: 95%; } .chat-messages { padding: 16px; } .empty-state h2 { font-size: 1.3rem; } }
 </style>

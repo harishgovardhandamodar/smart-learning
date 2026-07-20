@@ -3,14 +3,19 @@
     <div class="footer-container">
       <div class="footer-content">
         <span class="footer-brand">🧪 SmartLearning</span>
-        <span class="footer-tagline">STEM adventures for curious minds!</span>
+        <span class="footer-tagline">{{ t('footer.tagline') }}</span>
       </div>
       <div class="footer-powered">
-        Powered by <strong>Ollama</strong> + <strong>Vue.js</strong>
+        {{ t('footer.poweredBy') }} <strong>Ollama</strong> + <strong>Vue.js</strong>
       </div>
     </div>
   </footer>
 </template>
+
+<script setup>
+import { inject } from 'vue'
+const t = inject('t')
+</script>
 
 <style scoped lang="scss">
 .footer {
@@ -53,7 +58,7 @@
   opacity: 0.6;
 
   strong {
-    color: var(--primary-light);
+    color: #A29BFE;
     opacity: 1;
   }
 }
