@@ -12,6 +12,8 @@ const routes = [
   { path: '/focus/:pathId/lesson/:lessonIndex', name: 'lesson', component: () => import('../views/LessonView.vue'), props: true },
   { path: '/focus/:pathId', name: 'focus-path', component: () => import('../views/FocusedLearnView.vue'), props: true },
   { path: '/focus/manage', name: 'manage-paths', component: () => import('../views/ManagePathsView.vue') },
+  { path: '/engine', name: 'adaptive-engine', component: () => import('../views/AdaptiveEngineView.vue') },
+  { path: '/engine/physics-week', name: 'physics-week', component: () => import('../views/PhysicsWeekView.vue') },
 ]
 
 const router = createRouter({
