@@ -128,6 +128,48 @@
       </div>
     </section>
 
+    <!-- Focused Learning: Physics Deep Dive -->
+    <section class="focused-learn-section container animate-slide-up">
+      <h2 class="section-title">🔬 {{ t('home.focusedLearnTitle') }}</h2>
+      <div class="focused-grid">
+        <router-link to="/engine/physics-week" class="focused-card focused-physics">
+          <div class="focused-card-glow"></div>
+          <div class="focused-card-content">
+            <div class="focused-badge">{{ t('home.summerCamp') }}</div>
+            <h3>{{ t('home.physicsWeekTitle') }}</h3>
+            <p>{{ t('home.physicsWeekDesc') }}</p>
+            <div class="focused-topics">
+              <span class="focused-tag">🏃 Kinematics</span>
+              <span class="focused-tag">🌊 Waves & Sound</span>
+              <span class="focused-tag">💡 Light & Optics</span>
+              <span class="focused-tag">🧲 Magnetism</span>
+            </div>
+            <div class="focused-cta">
+              <span class="cta-btn">Start Week 1 →</span>
+            </div>
+          </div>
+        </router-link>
+
+        <router-link to="/engine" class="focused-card focused-engine">
+          <div class="focused-card-glow"></div>
+          <div class="focused-card-content">
+            <div class="focused-badge">{{ t('home.adaptiveBadge') }}</div>
+            <h3>{{ t('home.engineTitle') }}</h3>
+            <p>{{ t('home.engineDesc') }}</p>
+            <div class="focused-features">
+              <div class="focused-feat"><span>🎯</span> {{ t('home.featGoals') }}</div>
+              <div class="focused-feat"><span>⏱️</span> {{ t('home.featTimer') }}</div>
+              <div class="focused-feat"><span>🌳</span> {{ t('home.featSkills') }}</div>
+              <div class="focused-feat"><span>👥</span> {{ t('home.featGuilds') }}</div>
+            </div>
+            <div class="focused-cta">
+              <span class="cta-btn">Open Engine →</span>
+            </div>
+          </div>
+        </router-link>
+      </div>
+    </section>
+
     <!-- Curiosity Nudge -->
     <section class="curiosity-nudge-section container animate-slide-up" v-if="nudgeMessage">
       <div class="curiosity-nudge-card">
@@ -426,6 +468,131 @@ onUnmounted(() => {
 }
 
 .topic-action { font-family: var(--font-display); font-weight: 600; color: var(--primary); font-size: 0.95rem; display: flex; align-items: center; gap: 4px; span { transition: transform 0.3s ease; } }
+
+/* ── Focused Learning Section ── */
+.focused-learn-section { padding: 60px 20px; }
+
+.focused-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 24px;
+}
+
+.focused-card {
+  position: relative;
+  border-radius: var(--radius-lg);
+  padding: 32px;
+  text-decoration: none;
+  color: var(--text);
+  overflow: hidden;
+  transition: all 0.35s ease;
+  border: 2px solid transparent;
+}
+.focused-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-hover);
+}
+
+.focused-physics {
+  background: linear-gradient(135deg, rgba(108, 92, 231, 0.06), rgba(253, 121, 168, 0.06));
+  border-color: rgba(108, 92, 231, 0.12);
+}
+.focused-physics:hover { border-color: var(--primary); }
+
+.focused-engine {
+  background: linear-gradient(135deg, rgba(0, 184, 148, 0.06), rgba(108, 92, 231, 0.06));
+  border-color: rgba(0, 184, 148, 0.12);
+}
+.focused-engine:hover { border-color: #00B894; }
+
+.focused-card-glow {
+  position: absolute;
+  top: -40px; right: -40px;
+  width: 160px; height: 160px;
+  border-radius: 50%;
+  opacity: 0.08;
+  pointer-events: none;
+}
+.focused-physics .focused-card-glow { background: var(--primary); }
+.focused-engine .focused-card-glow { background: #00B894; }
+
+.focused-card-content { position: relative; z-index: 1; }
+
+.focused-badge {
+  display: inline-block;
+  padding: 3px 12px;
+  border-radius: 10px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 12px;
+}
+.focused-physics .focused-badge {
+  background: rgba(108, 92, 231, 0.12);
+  color: var(--primary);
+}
+.focused-engine .focused-badge {
+  background: rgba(0, 184, 148, 0.12);
+  color: #00B894;
+}
+
+.focused-card h3 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.focused-card p {
+  font-size: 0.9rem;
+  color: var(--text-light);
+  line-height: 1.5;
+  margin-bottom: 16px;
+}
+
+.focused-topics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 20px;
+}
+.focused-tag {
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  background: var(--chip-bg);
+  color: var(--text-light);
+}
+
+.focused-features {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+.focused-feat {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+  color: var(--text-light);
+}
+.focused-feat span { font-size: 1rem; }
+
+.focused-cta { margin-top: auto; }
+.cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: gap 0.3s;
+}
+.focused-physics .cta-btn { color: var(--primary); }
+.focused-engine .cta-btn { color: #00B894; }
+.focused-card:hover .cta-btn { gap: 8px; }
 
 /* ── How It Works ── */
 .how-it-works { padding: 40px 20px 80px; }
