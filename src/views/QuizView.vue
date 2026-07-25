@@ -139,10 +139,12 @@ import { ref, computed, inject } from 'vue'
 import { useRoute } from 'vue-router'
 import { STEM_TOPICS } from '../data/topics'
 import { generateQuiz, getModels, getDefaultModel } from '../services/ollama'
+import { trackQuizComplete } from '../data/kids'
 
 const route = useRoute()
 const t = inject('t')
 const locale = inject('locale')
+const selectedKidId = inject('selectedKidId')
 const topicId = computed(() => route.params.topicId)
 const topic = computed(() => STEM_TOPICS.find(t => t.id === topicId.value) || STEM_TOPICS[0])
 
@@ -203,6 +205,7 @@ function nextQuestion() {
     showResult.value = false
   } else {
     quizComplete.value = true
+    trackQuizComplete(selectedKidId.value, topicId.value, score.value, questions.value.length, questions.value)
   }
 }
 

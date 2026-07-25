@@ -89,6 +89,7 @@
 
 <script setup>
 import { ref, computed, onMounted, inject } from 'vue'
+import { storage } from '../utils/storage'
 import { FUN_FACTS, TOPIC_COLORS, TOPIC_NAMES, getCuriosityScore, getNextNudge, markFactSeen } from '../data/funFacts'
 
 const t = inject('t')
@@ -121,7 +122,7 @@ function getTopicName(topic) {
 }
 
 function getReadHistory() {
-  return JSON.parse(localStorage.getItem('foxy_fact_history') || '{}')
+  return storage.get('foxy_fact_history', {})
 }
 
 function isRead(id) {

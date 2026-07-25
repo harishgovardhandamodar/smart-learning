@@ -1,4 +1,5 @@
 import { Ollama } from 'ollama'
+import { storage } from '../utils/storage'
 
 const ollama = new Ollama({ host: 'http://localhost:11434' })
 
@@ -21,6 +22,8 @@ export function getModels() {
 
 export function getDefaultModel() {
   if (availableModels.length === 0) return ''
+  const saved = storage.get('foxy_selected_model', null)
+  if (saved && availableModels.some(m => m.name === saved)) return saved
   const preferred = ['llama3.2', 'llama3.1', 'llama3', 'llama2', 'mistral', 'gemma2', 'phi3']
   for (const name of preferred) {
     if (availableModels.some(m => m.name.startsWith(name))) {
@@ -260,4 +263,111 @@ export function extractConceptsLocally(question, responseText, locale = 'en') {
 
 export function generateMindMap(question, responseText, locale = 'en') {
   return extractConceptsLocally(question, responseText, locale)
+}
+
+// ── Data Sandbox: Chart & Analysis Verifier ──
+
+export async function verifyChartAnalysis({ chartType, independentVar, dependentVar, studentConclusion, datasetContext, model, locale = 'en' }) {
+  const selectedModel = model || getDefaultModel()
+
+  const systemPrompt = locale === 'nl'
+    ? 'Je bent een datascience-professor die een scholier beoordeel. Wees streng over gegevensnauwkeurigheid maar bemoedigend. Output ALLEEN JSON.'
+    : 'You are a data science professor grading a high school student. Be strict on data accuracy but encouraging. Output JSON only.'
+
+  const prompt = locale === 'nl' ? `
+    ${datasetContext}
+
+    Selectie van de leerling:
+    - Gebruikte Grafiektype: ${chartType}
+    - X-as: ${independentVar}
+    - Y-as: ${dependentVar}
+    - Geschreven Analyse van de Leerling: "${studentConclusion}"
+
+    Beoordeel of hun grafiektype geschikt is en of hun geschreven conclusie nauwkeurig de gegevens weerspiegelt.
+    Output je beoordeling strikt in dit JSON-formaat:
+    {
+        "chart_type_valid": true/false,
+        "analysis_accurate": true/false,
+        "socratic_feedback": "Kort, behulpzaam hint dat een nuance mist. Geef het antwoord niet."
+    }
+  ` : `
+    ${datasetContext}
+
+    Student's Selection:
+    - Chart Type Used: ${chartType}
+    - X-Axis: ${independentVar}
+    - Y-Axis: ${dependentVar}
+    - Student's Written Analysis: "${studentConclusion}"
+
+    Analyze if their chart type is appropriate and if their written conclusion accurately reflects the data.
+    Output your assessment strictly in this JSON format:
+    {
+        "chart_type_valid": true/false,
+        "analysis_accurate": true/false,
+        "socratic_feedback": "A short, helpful hint guiding them if they missed a nuance. Do not give the answer."
+    }
+  `
+
+  try {
+    const response = await ollama.chat({
+      model: selectedModel,
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: prompt },
+      ],
+      format: 'json',
+      options: { temperature: 0.1 },
+    })
+
+    return JSON.parse(response.message.content)
+  } catch {
+    return {
+      chart_type_valid: true,
+      analysis_accurate: false,
+      socratic_feedback: locale === 'nl'
+        ? 'Kon niet controleren. Kijk nog eens naar de grafiek!'
+        : 'Unable to verify. Take a closer look at the chart!',
+    }
+  }
+}
+
+// ── Data Sandbox: AI Debate Flaw Generator ──
+
+export async function generateDebateResponse({ dataset, studentFlaws, model, locale = 'en' }) {
+  const selectedModel = model || getDefaultModel()
+
+  const systemPrompt = locale === 'nl'
+    ? 'Je bent een AI die expres een foutieve interpretatie van een grafiek maakt. De leerling moet je fouten vinden. Wees overtuigend maar fout.'
+    : 'You are an AI deliberately making a flawed interpretation of a chart. The student must find your mistakes. Be persuasive but wrong.'
+
+  const prompt = locale === 'nl' ? `
+    De leerling heeft ${studentFlaws.length} fout gevonden in je eerdere analyse.
+    Geef een kort, bemoedigend antwoord en leg uit of ze compleet waren.
+    Output JSON: { "response": "je antwoord", "all_found": true/false }
+  ` : `
+    The student found ${studentFlaws.length} flaws in your earlier analysis.
+    Give a short, encouraging response and explain if they were complete.
+    Output JSON: { "response": "your response", "all_found": true/false }
+  `
+
+  try {
+    const response = await ollama.chat({
+      model: selectedModel,
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: prompt },
+      ],
+      format: 'json',
+      options: { temperature: 0.3 },
+    })
+
+    return JSON.parse(response.message.content)
+  } catch {
+    return {
+      response: locale === 'nl'
+        ? 'Goed gedaan! Je hebt goed nagedacht over de gegevens.'
+        : 'Well done! You thought carefully about the data.',
+      all_found: true,
+    }
+  }
 }

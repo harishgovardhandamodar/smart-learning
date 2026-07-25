@@ -1,9 +1,10 @@
 import { ref, computed } from 'vue'
+import { storage } from '../utils/storage'
 import en from './locales/en.js'
 import nl from './locales/nl.js'
 
 const locales = { en, nl }
-const currentLocale = ref(localStorage.getItem('locale') || 'en')
+const currentLocale = ref(storage.get('locale', 'en'))
 
 export function useI18n() {
   function t(key) {
@@ -19,7 +20,7 @@ export function useI18n() {
   function setLocale(locale) {
     if (locales[locale]) {
       currentLocale.value = locale
-      localStorage.setItem('locale', locale)
+      storage.set('locale', locale)
       document.documentElement.lang = locale
     }
   }

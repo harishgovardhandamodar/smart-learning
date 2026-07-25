@@ -1,16 +1,17 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
-import TopicsView from '../views/TopicsView.vue'
-import LearnView from '../views/LearnView.vue'
-import QuizView from '../views/QuizView.vue'
-import FunFactsView from '../views/FunFactsView.vue'
 
 const routes = [
-  { path: '/', name: 'home', component: HomeView },
-  { path: '/topics', name: 'topics', component: TopicsView },
-  { path: '/learn/:topicId', name: 'learn', component: LearnView, props: true },
-  { path: '/quiz/:topicId', name: 'quiz', component: QuizView, props: true },
-  { path: '/fun-facts', name: 'fun-facts', component: FunFactsView },
+  { path: '/', name: 'home', component: () => import('../views/HomeView.vue') },
+  { path: '/topics', name: 'topics', component: () => import('../views/TopicsView.vue') },
+  { path: '/learn/:topicId', name: 'learn', component: () => import('../views/LearnView.vue'), props: true },
+  { path: '/quiz/:topicId', name: 'quiz', component: () => import('../views/QuizView.vue'), props: true },
+  { path: '/fun-facts', name: 'fun-facts', component: () => import('../views/FunFactsView.vue') },
+  { path: '/enroll', name: 'enroll', component: () => import('../views/EnrollView.vue') },
+  { path: '/dashboard', name: 'dashboard', component: () => import('../views/DashboardView.vue') },
+  { path: '/focus', name: 'focus', component: () => import('../views/FocusedLearnView.vue') },
+  { path: '/focus/:pathId/lesson/:lessonIndex', name: 'lesson', component: () => import('../views/LessonView.vue'), props: true },
+  { path: '/focus/:pathId', name: 'focus-path', component: () => import('../views/FocusedLearnView.vue'), props: true },
+  { path: '/focus/manage', name: 'manage-paths', component: () => import('../views/ManagePathsView.vue') },
 ]
 
 const router = createRouter({
