@@ -170,13 +170,17 @@ async function scrollToBottom() {
 }
 
 async function fetchImage(msgIndex, userQuestion) {
+  console.log('[fetchImage] called index=%d question="%s"', msgIndex, userQuestion)
   const query = extractSearchQuery(userQuestion, topic.value.title)
+  console.log('[fetchImage] extracted query="%s" locale=%s', query, locale.value)
   imageLoading.value.set(msgIndex, true)
   await nextTick()
   try {
     const result = await fetchTopicImage(query, locale.value)
+    console.log('[fetchImage] result:', result)
     if (result) images.value.set(msgIndex, result)
-  } catch {
+  } catch (err) {
+    console.warn('[fetchImage] error:', err)
   } finally {
     imageLoading.value.set(msgIndex, false)
     await scrollToBottom()
