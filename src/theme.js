@@ -1,6 +1,7 @@
 import { ref, computed, watchEffect } from 'vue'
+import { storage } from './utils/storage'
 
-const stored = localStorage.getItem('theme')
+const stored = storage.get('theme', null)
 const isDark = ref(stored ? stored === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches)
 
 function applyTheme() {
@@ -13,7 +14,7 @@ export function useTheme() {
   }
 
   watchEffect(() => {
-    localStorage.setItem('theme', isDark.value ? 'dark' : 'light')
+    storage.set('theme', isDark.value ? 'dark' : 'light')
     applyTheme()
   })
 

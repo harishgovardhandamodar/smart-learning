@@ -385,6 +385,8 @@ export const TOPIC_NAMES = {
 // ── Focus & Curiosity Algorithm ──
 // Tracks learning streaks, spaced repetition, and curiosity engagement
 
+import { storage } from '../utils/storage'
+
 const STORAGE_KEY_STREAK = 'foxy_streak'
 const STORAGE_KEY_LAST_VISIT = 'foxy_last_visit'
 const STORAGE_KEY_FACT_HISTORY = 'foxy_fact_history'
@@ -395,8 +397,8 @@ function getToday() {
 }
 
 export function getLearningStreak() {
-  const streak = parseInt(localStorage.getItem(STORAGE_KEY_STREAK) || '0', 10)
-  const lastVisit = localStorage.getItem(STORAGE_KEY_LAST_VISIT)
+  const streak = storage.get(STORAGE_KEY_STREAK, 0)
+  const lastVisit = storage.get(STORAGE_KEY_LAST_VISIT, null)
 
   if (!lastVisit) return streak
 
@@ -411,13 +413,13 @@ export function getLearningStreak() {
 
 export function recordVisit() {
   const streak = getLearningStreak()
-  localStorage.setItem(STORAGE_KEY_STREAK, String(streak))
-  localStorage.setItem(STORAGE_KEY_LAST_VISIT, getToday())
+  storage.set(STORAGE_KEY_STREAK, streak)
+  storage.set(STORAGE_KEY_LAST_VISIT, getToday())
 }
 
 // Spaced repetition: return facts not yet shown, or ones due for review
 export function getSpacedFacts(count = 1) {
-  const history = JSON.parse(localStorage.getItem(STORAGE_KEY_FACT_HISTORY) || '{}')
+  const history = storage.get(STORAGE_KEY_FACT_HISTORY, {})
   const today = getToday()
 
   const unseen = FUN_FACTS.filter(f => !history[f.id])
@@ -434,13 +436,13 @@ export function getSpacedFacts(count = 1) {
 }
 
 export function markFactSeen(factId) {
-  const history = JSON.parse(localStorage.getItem(STORAGE_KEY_FACT_HISTORY) || '{}')
+  const history = storage.get(STORAGE_KEY_FACT_HISTORY, {})
   history[factId] = getToday()
-  localStorage.setItem(STORAGE_KEY_FACT_HISTORY, JSON.stringify(history))
+  storage.set(STORAGE_KEY_FACT_HISTORY, history)
 }
 
 export function getCuriosityScore() {
-  const history = JSON.parse(localStorage.getItem(STORAGE_KEY_FACT_HISTORY) || '{}')
+  const history = storage.get(STORAGE_KEY_FACT_HISTORY, {})
   const seen = Object.keys(history).length
   const total = FUN_FACTS.length
 
@@ -481,7 +483,7 @@ export function getNextNudge() {
     ],
   }
 
-  const locale = localStorage.getItem('locale') || 'en'
+  const locale = storage.get('locale', 'en')
   const list = nudges[locale] || nudges.en
 
   for (let i = list.length - 1; i >= 0; i--) {

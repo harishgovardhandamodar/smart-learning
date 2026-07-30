@@ -91,16 +91,18 @@
 </template>
 
 <script setup>
-import { ref, computed, nextTick, onMounted, inject } from 'vue'
+import { ref, computed, nextTick, onMounted, onUnmounted, inject } from 'vue'
 import { useRoute } from 'vue-router'
 import { STEM_TOPICS } from '../data/topics'
 import { sendMessage as ollamaSend, generateMindMap, getModels, getDefaultModel } from '../services/ollama'
+import { trackMessage, trackSessionStart, trackSessionEnd } from '../data/kids'
 import MindMap from '../components/MindMap.vue'
 
 const route = useRoute()
 const connected = inject('isConnected')
 const t = inject('t')
 const locale = inject('locale')
+const selectedKidId = inject('selectedKidId')
 
 const topicId = computed(() => route.params.topicId)
 const topic = computed(() => STEM_TOPICS.find(t => t.id === topicId.value) || STEM_TOPICS[0])
@@ -181,6 +183,7 @@ async function sendMessage(text) {
   messages.value.push({ role: 'user', content })
   userInput.value = ''
   isLoading.value = true
+  trackMessage(selectedKidId.value, topicId.value)
   await scrollToBottom()
 
   try {
@@ -210,6 +213,11 @@ onMounted(() => {
   models.value = getModels()
   const defaultModel = getDefaultModel()
   if (defaultModel) selectedModel.value = defaultModel
+  trackSessionStart(selectedKidId.value)
+})
+
+onUnmounted(() => {
+  trackSessionEnd(selectedKidId.value)
 })
 </script>
 
