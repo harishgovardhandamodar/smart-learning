@@ -143,9 +143,9 @@ function formatPace(pace) {
   text-align: center;
 }
 .cert-icon { font-size: 1.5rem; }
-.cert-title { font-weight: 700; font-size: 0.8rem; color: #92400e; margin: 0.25rem 0; }
-.cert-desc { font-size: 0.65rem; color: #a16207; }
+.cert-title { font-weight: 700; font-size: 0.8rem; color: var(--text); margin: 0.25rem 0; }
 
+.cert-desc { font-size: 0.65rem; color: var(--text-light); }
 .rec-card {
   background: var(--chip-bg, #f8fafc);
   border-radius: 10px;
@@ -162,7 +162,7 @@ function formatPace(pace) {
   padding: 0.2rem 0.6rem;
   border-radius: 6px;
 }
-.rec-pace.catch-up { background: #fef3c7; color: #92400e; }
-.rec-pace.on-track { background: #d1fae5; color: #065f46; }
-.rec-pace.ahead { background: #ede9fe; color: #5b21b6; }
+.rec-pace.catch-up { background: var(--chip-bg); color: var(--warning); }
+.rec-pace.on-track { background: var(--chip-bg); color: var(--success); }
+.rec-pace.ahead { background: var(--chip-bg); color: var(--primary); }
 </style>

@@ -342,7 +342,7 @@ onUnmounted(() => {
 }
 .status-icon { font-size: 1.5rem; }
 .status-info {
-  strong { display: block; font-family: var(--font-display); color: #E17055; margin-bottom: 4px; }
+  strong { display: block; font-family: var(--font-display); color: var(--warning); margin-bottom: 4px; }
   p { font-size: 0.9rem; color: var(--text-light); code { background: var(--code-bg); padding: 2px 8px; border-radius: 6px; font-size: 0.85rem; color: var(--primary); } }
 }
 
@@ -463,7 +463,7 @@ onUnmounted(() => {
 
 .topic-fun-fact {
   background: rgba(253, 203, 110, 0.1); border-radius: 12px; padding: 12px; margin-bottom: 16px;
-  .fun-fact-label { font-family: var(--font-display); font-weight: 600; font-size: 0.8rem; color: #E17055; display: block; margin-bottom: 4px; }
+  .fun-fact-label { font-family: var(--font-display); font-weight: 600; font-size: 0.8rem; color: var(--warning); display: block; margin-bottom: 4px; }
   p { font-size: 0.8rem; color: var(--text-light); line-height: 1.4; }
 }
 

@@ -691,13 +691,13 @@ onMounted(loadDashboard)
 .gen-progress p { font-size: 0.85rem; color: var(--text-light); margin: 0; }
 .gen-hint { font-size: 0.78rem; color: var(--text-muted); }
 .gen-error { padding: 12px; background: #fef2f2; border-radius: 10px; text-align: center; }
-.gen-error p { color: #dc2626; margin: 0 0 8px; font-size: 0.85rem; }
+.gen-error p { color: var(--danger); margin: 0 0 8px; font-size: 0.85rem; }
 .gen-ready {
   display: flex; align-items: center; gap: 12px; padding: 12px; flex-wrap: wrap;
-  border: 1px solid #bbf7d0; border-radius: 10px; background: #f0fdf4;
+  border: 1px solid var(--success); border-radius: 10px; background: var(--chip-bg);
 }
 .gen-ready-icon { font-size: 1.2rem; }
-.gen-ready span { font-size: 0.85rem; color: #166534; font-weight: 600; flex: 1; }
+.gen-ready span { font-size: 0.85rem; color: var(--success); font-weight: 600; flex: 1; }
 .gen-ready .btn { flex-shrink: 0; }
 .loading-spinner {
   display: inline-block; width: 20px; height: 20px;

@@ -595,6 +595,7 @@ watch(() => props.concepts, () => {
 .branch-text, .center-text, .leaf-text {
   font-family: var(--font-display);
   font-weight: 600;
+  fill: var(--text-light);
   pointer-events: none;
 }
 

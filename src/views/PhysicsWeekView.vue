@@ -586,9 +586,9 @@ onMounted(async () => {
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
-.day-badge.explore { background: #dfe6fd; color: #4a5acf; }
-.day-badge.manipulate { background: #fef3cd; color: #b8860b; }
-.day-badge.mastery { background: #d4edda; color: #155724; }
+.day-badge.explore { background: rgba(108, 92, 231, 0.15); color: var(--primary); }
+.day-badge.manipulate { background: rgba(253, 203, 110, 0.2); color: var(--warning); }
+.day-badge.mastery { background: rgba(0, 184, 148, 0.15); color: var(--success); }
 
 .day-sections {
   display: flex;

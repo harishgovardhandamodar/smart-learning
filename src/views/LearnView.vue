@@ -307,7 +307,7 @@ onUnmounted(() => {
 
 .model-select { font-family: var(--font-body); font-size: 0.8rem; padding: 4px 10px; border-radius: 8px; border: 2px solid var(--border); background: var(--input-bg); color: var(--text); outline: none; cursor: pointer; &:focus { border-color: var(--primary); } }
 
-.no-model-warning { margin-bottom: 10px; font-size: 0.85rem; color: #E17055; code { background: rgba(253, 203, 110, 0.2); padding: 2px 6px; border-radius: 4px; } }
+.no-model-warning { margin-bottom: 10px; font-size: 0.85rem; color: var(--warning); code { background: rgba(253, 203, 110, 0.2); padding: 2px 6px; border-radius: 4px; } }
 .chat-form { display: flex; gap: 10px; }
 
 .chat-input {

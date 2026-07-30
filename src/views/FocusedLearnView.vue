@@ -346,7 +346,7 @@ onMounted(loadData)
   padding: 2px 8px; border-radius: 6px; font-size: 0.7rem; font-weight: 600; text-transform: uppercase;
 }
 .badge-beginner { background: rgba(0, 184, 148, 0.12); color: var(--success); }
-.badge-intermediate { background: rgba(253, 203, 110, 0.15); color: #e17055; }
+.badge-intermediate { background: rgba(253, 203, 110, 0.15); color: var(--warning); }
 .badge-advanced { background: rgba(255, 118, 117, 0.12); color: var(--danger); }
 .badge-custom { background: rgba(108, 92, 231, 0.1); color: var(--primary); }
 

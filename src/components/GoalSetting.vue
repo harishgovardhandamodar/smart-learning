@@ -135,11 +135,11 @@ function formatFeatureName(name) {
   align-items: center;
   gap: 0.5rem;
   padding: 0.75rem;
-  background: linear-gradient(135deg, #fef3c7, #fde68a);
+  background: var(--chip-bg);
   border-radius: 10px;
   margin-bottom: 1rem;
   font-size: 0.85rem;
-  color: #92400e;
+  color: var(--warning);
 }
 .enc-icon { font-size: 1.3rem; }
 
