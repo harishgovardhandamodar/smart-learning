@@ -242,53 +242,53 @@
             </div>
           </div>
 
-          <!-- Admin Actions -->
-          <div class="card admin-card animate-slide-up">
-            <h3 class="card-title">⚙️ {{ t('dashboard.settings') }}</h3>
-            <div class="admin-actions">
-              <button class="btn btn-outline" @click="changePin">{{ t('dashboard.changePin') }}</button>
-              <button class="btn btn-outline" @click="removePin">{{ t('dashboard.removePin') }}</button>
-              <router-link to="/enroll" class="btn btn-outline">➕ {{ t('dashboard.addKid') }}</router-link>
-            </div>
-          </div>
-
-          <!-- Physics Curriculum Generator -->
-          <div class="card physics-gen-card animate-slide-up">
-            <h3 class="card-title">🔬 {{ t('dashboard.physicsGenTitle') }}</h3>
-            <p class="gen-desc">{{ t('dashboard.physicsGenDesc') }}</p>
-
-            <div v-if="genReady" class="gen-ready">
-              <span class="gen-ready-icon">✅</span>
-              <span>{{ t('dashboard.physicsGenReady') }}</span>
-              <router-link to="/engine/physics-week" class="btn btn-sm btn-primary">
-                👀 {{ t('dashboard.physicsGenView') }}
-              </router-link>
-            </div>
-
-            <div v-else-if="genLoading" class="gen-progress">
-              <span class="loading-spinner"></span>
-              <p>{{ t('dashboard.physicsGenProgress') }}</p>
-              <p class="gen-hint">{{ t('dashboard.physicsGenHint') }}</p>
-            </div>
-
-            <div v-else-if="genError" class="gen-error">
-              <p>⚠️ {{ genError }}</p>
-              <button class="btn btn-sm btn-danger" @click="genError = ''">{{ t('dashboard.tryAgain') }}</button>
-            </div>
-
-            <div v-else class="gen-form">
-              <select v-model="genModel" class="gen-select">
-                <optgroup :label="t('dashboard.genModelLabel')">
-                  <option v-for="m in availableModels" :key="m.name" :value="m.name">{{ m.name }}</option>
-                </optgroup>
-              </select>
-              <button class="btn btn-primary btn-gen" @click="generatePhysics" :disabled="genLoading">
-                🚀 {{ t('dashboard.physicsGenButton') }}
-              </button>
-            </div>
-          </div>
-
         </template>
+
+        <!-- Admin Actions (always visible when authenticated) -->
+        <div class="card admin-card animate-slide-up">
+          <h3 class="card-title">⚙️ {{ t('dashboard.settings') }}</h3>
+          <div class="admin-actions">
+            <button class="btn btn-outline" @click="changePin">{{ t('dashboard.changePin') }}</button>
+            <button class="btn btn-outline" @click="removePin">{{ t('dashboard.removePin') }}</button>
+            <router-link to="/enroll" class="btn btn-outline">➕ {{ t('dashboard.addKid') }}</router-link>
+          </div>
+        </div>
+
+        <!-- Physics Curriculum Generator (always visible when authenticated) -->
+        <div class="card physics-gen-card animate-slide-up">
+          <h3 class="card-title">🔬 {{ t('dashboard.physicsGenTitle') }}</h3>
+          <p class="gen-desc">{{ t('dashboard.physicsGenDesc') }}</p>
+
+          <div v-if="genReady" class="gen-ready">
+            <span class="gen-ready-icon">✅</span>
+            <span>{{ t('dashboard.physicsGenReady') }}</span>
+            <router-link to="/engine/physics-week" class="btn btn-sm btn-primary">
+              👀 {{ t('dashboard.physicsGenView') }}
+            </router-link>
+          </div>
+
+          <div v-else-if="genLoading" class="gen-progress">
+            <span class="loading-spinner"></span>
+            <p>{{ t('dashboard.physicsGenProgress') }}</p>
+            <p class="gen-hint">{{ t('dashboard.physicsGenHint') }}</p>
+          </div>
+
+          <div v-else-if="genError" class="gen-error">
+            <p>⚠️ {{ genError }}</p>
+            <button class="btn btn-sm btn-danger" @click="genError = ''">{{ t('dashboard.tryAgain') }}</button>
+          </div>
+
+          <div v-else class="gen-form">
+            <select v-model="genModel" class="gen-select">
+              <optgroup :label="t('dashboard.genModelLabel')">
+                <option v-for="m in availableModels" :key="m.name" :value="m.name">{{ m.name }}</option>
+              </optgroup>
+            </select>
+            <button class="btn btn-primary btn-gen" @click="generatePhysics" :disabled="genLoading">
+              🚀 {{ t('dashboard.physicsGenButton') }}
+            </button>
+          </div>
+        </div>
       </template>
 
       <!-- Remove Kid Confirm Modal -->
