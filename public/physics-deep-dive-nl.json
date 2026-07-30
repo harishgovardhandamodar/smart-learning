@@ -1,0 +1,392 @@
+{
+  "weeks": [
+    {
+      "week": 1,
+      "title": "Kinetica",
+      "subtitle": "Kinetica — Beweging, Snelheid, Versnelling",
+      "days": [
+        {
+          "day": 1,
+          "title": "De snelheid van een fiets",
+          "focus": "Eén voor één: Beweging en snelheid",
+          "morning": "Als je op je fiets zit, merk je waarschijnlijk dat als je sneller gaat, je vordering op de weg groter wordt. Dit is omdat je sneller over het land verstrekt. 🚴‍♀️💨",
+          "midday": "Je kunt ook een gemiddelde berekenen van je afstanden en tijd om je snelheid te bepalen. Hoe sneller is 5 km/h sneller dan 4 km/h? 🚴‍♀️📊",
+          "evening": "Maak een grafiek met je meetgegevens om je snelheid op te lossen.",
+          "materials": [],
+          "questions": []
+        },
+        {
+          "day": 2,
+          "title": "Versnelling",
+          "focus": "Eén voor één: Beweging en versnelling",
+          "morning": "Als je een auto of bus bestuurt, merk je waarschijnlijk dat als de trein langzamer gaat, je reist langzamer. Dit is omdat de snelheid van de trein het verhoudingsgewijs veranderingen in de tijd beïnvloedt. 🚂🕰️",
+          "midday": "Hoe sneller ga je, hoe groter jouw versnelling wordt? Stel dit op en zie hoe het resultaat is! 🚴‍♀️📈",
+          "evening": "Maak een grafiek met je meetgegevens om jouw versnelling te verstaan.",
+          "materials": [],
+          "questions": []
+        },
+        {
+          "day": 3,
+          "title": "De kracht van beweging",
+          "focus": "Eén voor één: Beweging, snelheid en versnelling",
+          "morning": "Als je op een bikefiets zit, merk je waarschijnlijk dat als je sneller gaat, je vordering op de weg groter wordt. Dit is omdat je sneller over het land verstrekt. 🚴‍♀️💨",
+          "midday": "Hoe meer beweging, hoe groter de kracht wordt? Stel dit op en zie hoe het resultaat is! 🚂💪",
+          "evening": "Maak een grafiek met je meetgegevens om jouw snelheid te bepalen.",
+          "materials": [],
+          "questions": []
+        },
+        {
+          "day": 4,
+          "title": "Versnelling en kracht",
+          "focus": "Eén voor één: Beweging, snelheid, versnelling en kracht",
+          "morning": "Als je van fiets bestuurt, merk je waarschijnlijk dat als je sneller gaat, je vordering op de weg groter wordt. Dit is omdat je sneller over het land verstrekt. 🚴‍♀️💨",
+          "midday": "Hoe sneller je gaat, hoe groter jouw versnelling wordt? Stel dit op en zie hoe het resultaat is! 🚂💨",
+          "evening": "Maak een grafiek met je meetgegevens om jouw versnelling te verstaan.",
+          "materials": [],
+          "questions": []
+        },
+        {
+          "day": 5,
+          "title": "Beweging op de grond",
+          "focus": "Eén voor één: Beweging, snelheid, versnelling en kracht",
+          "morning": "Als je van fiets bestuurt, merk je waarschijnlijk dat als je sneller gaat, je vordering op de weg groter wordt. Dit is omdat je sneller over het land verstrekt. 🚴‍♀️💨",
+          "midday": "Hoe meer beweging op de grond, hoe groter de kracht wordt? Stel dit op en zie hoe het resultaat is! 🚂💪",
+          "evening": "Maak een grafiek met je meetgegevens om jouw snelheid te bepalen.",
+          "materials": [],
+          "questions": []
+        },
+        {
+          "day": 6,
+          "title": "De kracht van een versnelling",
+          "focus": "Eén voor één: Beweging, snelheid, versnelling en kracht",
+          "morning": "Als je van fiets bestuurt, merk je waarschijnlijk dat als je sneller gaat, je vordering op de weg groter wordt. Dit is omdat je sneller over het land verstrekt. 🚴‍♀️💨",
+          "midday": "Hoe sneller je gaat, hoe groter jouw versnelling wordt? Stel dit op en zie hoe het resultaat is! 🚂💨",
+          "evening": "Maak een grafiek met je meetgegevens om jouw snelheid te bepalen.",
+          "materials": [],
+          "questions": []
+        },
+        {
+          "day": 7,
+          "title": "Beweging in beweging",
+          "focus": "Eén voor één: Beweging, snelheid, versnelling en kracht",
+          "morning": "Als je van fiets bestuurt, merk je waarschijnlijk dat als je sneller gaat, je vordering op de weg groter wordt. Dit is omdat je sneller over het land verstrekt. 🚴‍♀️💨",
+          "midday": "Hoe meer beweging in beweging, hoe groter de kracht wordt? Stel dit op en zie hoe het resultaat is! 🚂💪",
+          "evening": "Maak een grafiek met je meetgegevens om jouw snelheid te bepalen.",
+          "materials": [],
+          "questions": []
+        }
+      ]
+    },
+    {
+      "week": 2,
+      "title": "Krachten & Energie",
+      "subtitle": "Krachten & Energie — Duwen, Trekken, Wrijving, Zwaartekracht",
+      "days": [
+        {
+          "day": 1,
+          "title": "Duwing: Hoe werkt het?",
+          "focus": "Leertje over duwing en zijn effecten",
+          "morning": "Als je een bal vooruit duwt, zal de bal vanzelf met dezelfde kracht die je ermee deed, de andere kant op gaan. Dit is omdat elk object in rust staat totdat er kracht op wordt uitgeoefend, en dan stopt het bewegen. 🏀🔄",
+          "midday": "Duwing is een soort kracht die je hebt om dingen vooruit te drukken of naar achter te duwen. Deze kracht kan je gebruiken om balen, ballonnen, of zelfs jouw vrienden vooruit te drukken! 😄 Als je iets duwt, trakt het op de kracht dat je ermee doet. 🤖",
+          "evening": "Experiment: Duwing met een bal",
+          "materials": [
+            "Bal",
+            "Klapdeksel",
+            "Gebogen wand"
+          ],
+          "questions": [
+            "Wat gebeurt er als je net duwt? 🤔",
+            "Wat is het resultaat van het uitdrukken van kracht op de bal? 🔄"
+          ]
+        },
+        {
+          "day": 2,
+          "title": "Trekken: Hoe werkt het?",
+          "focus": "Leertje over trekken en zijn effecten",
+          "morning": "Als je iemand tegen een muur trekt, zal hij niet heen en weer bewegen. Dit is omdat de kracht die je op hem uitgeoefend hebt gelijk is aan de kracht die de muur tegen hem uitoefent. 🤖🚪",
+          "midday": "Trekken is ook een soort kracht. Als je iets trekt, trakt het op de kracht dat je ermee doet. Dit kan je gebruiken om dingen naar beneden of naar boven te trekken. Je kunt zelfs een bal naar beneden trekken door van onderen op de bal te drukken! 🎿",
+          "evening": "Experiment: Trekken met een stalen draad",
+          "materials": [
+            "Staal",
+            "Kleurvolle bal",
+            "Tepel"
+          ],
+          "questions": [
+            "Wat is het effect van het uitdrukken van kracht op een muur? 🚪",
+            "Wat is de resultaat van het trekken van een bal naar beneden? 🎿"
+          ]
+        },
+        {
+          "day": 3,
+          "title": "Wrijving: Hoe werkt het?",
+          "focus": "Leertje over wrijving en zijn effecten",
+          "morning": "Als je iemand over een houten vloer waait, zal hij niet heen en weer bewegen. Dit is omdat de lucht die je urenlang over hem waait, ze uit zijn werkt, en je niet meer een kracht op hem uitoefent. ❄️🌬",
+          "midday": "Wrijving is ook een soort kracht. Als je een bal over een vloer wrijft, zal de bal heen en weer bewegen tot de lucht er uit is. Dit kan je gebruiken om balen te laten rollen of ronddraaien! 🏀",
+          "evening": "Experiment: Wrijving met een bal",
+          "materials": [
+            "Bal",
+            "Kleurvolle vloer",
+            "Wijzer"
+          ],
+          "questions": [
+            "Wat gebeurt er als je iemand urenlang over een houten vloer waait? ❄️",
+            "Wat is het effect van het wrijven van een bal over de vloer? 🏀"
+          ]
+        },
+        {
+          "day": 4,
+          "title": "Zwaartekracht: Hoe werkt het?",
+          "focus": "Leertje over zwaartekracht en zijn effecten",
+          "morning": "Als je iemand naar boven springt, zal hij met dezelfde kracht die hem naar beneden drukt, van zichzelf opnieuw omhoog drukken. Dit is omdat elk object in rust staat totdat er kracht op wordt uitgeoefend, en dan stopt het bewegen. 🤖🌟",
+          "midday": "Zwaartekracht is de kracht die je hebt om dingen naar beneden te trekken. Deze kracht is sterker dan duwing en trekken! De zwaartekracht is de enige kracht die een object ooit op aarde kan drukken, en is daarom belangrijk om in het leven aan je te denken. 🌎",
+          "evening": "Experiment: Zwaartekracht en balloon",
+          "materials": [
+            "Balloons",
+            "Stok",
+            "Ruiters stoel"
+          ],
+          "questions": [
+            "Wat is het effect van de zwaartekracht op iemand die springt? 🤖",
+            "Wat gebeurt er als je een bal naar beneden laat vallen en je een stoel ondersteunt om hem tevangen? 🏀"
+          ]
+        },
+        {
+          "day": 5,
+          "title": "Duwing met meerdere krachten",
+          "focus": "Effecten van meerdere krachten op duwing",
+          "morning": "Als je een bal vooruit duwt maar tegelijkertijd tegen de muur is gedrukt, zal de bal niet heen en weer bewegen. Dit is omdat de kracht die je hebt om de bal naar voren te drukken gelijk is aan de kracht die de muur tegen hem uitoefent. 🤖🚪",
+          "midday": "Als je een bal vooruit duwt maar tegelijkertijd met de bal wordt ingesloten, zal deze niet heen en weer bewegen. Dit is omdat je twee krachten op de bal uitgeoefend hebt, waardoor ze gelijk zijn. 🤔",
+          "evening": "Experiment: Duwing met meerdere krachten",
+          "materials": [
+            "Bal",
+            "Klapdeksel",
+            "Gebogen wand"
+          ],
+          "questions": [
+            "Wat gebeurt er als je een bal vooruit duwt maar tegelijkertijd tegen de muur is gedrukt? 🤖",
+            "Wat is het effect van twee krachten op een bal? 🤔"
+          ]
+        },
+        {
+          "day": 6,
+          "title": "Trekken met meerdere krachten",
+          "focus": "Effecten van meerdere krachten op trekken",
+          "morning": "Als je iemand tegen een muur trekt maar tegelijkertijd naar beneden wordt getrokken, zal hij niet heen en weer bewegen. Dit is omdat de kracht die je hebt om hem naar boven te trekken gelijk is aan de kracht die de aarde tegen hem uitoefent. 🤖🌟",
+          "midday": "Als je iemand tegen een muur trekt maar tegelijkertijd met de bal wordt ingesloten, zal deze niet heen en weer bewegen. Dit is omdat je twee krachten op de bal uitgeoefend hebt, waardoor ze gelijk zijn. 🤔",
+          "evening": "Experiment: Trekken met meerdere krachten",
+          "materials": [
+            "Staal",
+            "Kleurvolle bal",
+            "Tepel"
+          ],
+          "questions": [
+            "Wat gebeurt er als je iemand tegen een muur trekt maar tegelijkertijd naar beneden wordt getrokken? 🤖",
+            "Wat is het effect van twee krachten op een bal? 🤔"
+          ]
+        },
+        {
+          "day": 7,
+          "title": "Kracht en beweging",
+          "focus": "Leertje over kracht en beweging",
+          "morning": "Kracht is de kracht die je hebt om dingen te doen of te laten. Beweging is het bewegen van een object. Beweging kan door verschillende krachten worden beïnvloed, zoals duwing, trekken en wrijving. 🏀🔄",
+          "midday": "Kracht en beweging zijn twee belangrijke begrippen in ons leven. Ze helpen ons begrijpen hoe het werkelijk is. Als je op een trampoline springt of in een balon springt, zal de zwaartekracht een rol spelen bij je val. 🌟",
+          "evening": "Experiment: Kracht en beweging",
+          "materials": [
+            "Trampolijn",
+            "Kleurvolle ballon",
+            "Ruiters stoel"
+          ],
+          "questions": [
+            "Wat is kracht? 🤖",
+            "Wat is beweging? 🏀"
+          ]
+        }
+      ]
+    },
+    {
+      "week": 3,
+      "title": "Golven & Geluid",
+      "subtitle": "Golven & Geluid — Trillingen, Toonhoogte, Amplitude",
+      "days": [
+        {
+          "day": 1,
+          "title": "De Trilling van een Gietje",
+          "focus": "Wat is trilling en hoe wordt hij gemaakt?",
+          "morning": "Trillingen zijn lage frektonen die we kunnen horen bij klokkens of geluidsoorters. Ze zijn heel lelijk! 📣",
+          "midday": "Trillingen worden gemaakt door een object (bijv. een gietje) te doen schudden of trillen, waardoor de lucht rondom het object trilt.",
+          "evening": "Experiment: Schud een gietje hardhandig en luister naar de trillingen! 🎧",
+          "materials": [
+            "Gietje, microfoon"
+          ],
+          "questions": [
+            "Wat is trilling? Hoe wordt hij gemaakt?"
+          ]
+        },
+        {
+          "day": 2,
+          "title": "Geluidsoorters en Toonhoogte",
+          "focus": "Wat is toonhoogte en hoe werkt het?",
+          "morning": "Toonhoogte is de hoogte van een geluid. Hoewel we geluidsvoorschriften gebruiken, is er geen exacte maat voor toonhoogte! 🎤",
+          "midday": "Toonhoogte wordt bepaald door hoe hard en lang het geluid duurt. Een langer en harder geluid heeft een hogere toonhoogte.",
+          "evening": "Experiment: Maak geluid met een klap van je hand en meet de toonhoogte met een toonmeter! 📊",
+          "materials": [
+            "Klap, microfoon, toonmeter"
+          ],
+          "questions": [
+            "Wat is toonhoogte? Hoe wordt hij bepaald?"
+          ]
+        },
+        {
+          "day": 3,
+          "title": "Amplitude: Hoe groot zit de schok?",
+          "focus": "Wat is amplitude en hoe werkt het?",
+          "morning": "Amplitude is de grootte van de schok die een geluid maakt. Je kunt het vinden door te luisteren naar de frequentie! 🔊",
+          "midday": "Amplitude wordt bepaald door de grootte van de golf en de duur waarop de golf zich vervolgt.",
+          "evening": "Experiment: Maak een golf met een bal op een plavelei en meet de amplitude! 🏓",
+          "materials": [
+            "Bal, plavelei, meten"
+          ],
+          "questions": [
+            "Wat is amplitude? Hoe wordt het bepaald?"
+          ]
+        },
+        {
+          "day": 4,
+          "title": "Frequenties en Golf",
+          "focus": "Hoe werken golven in geluid?",
+          "morning": "Golven zijn de schokgolven die door een medium (bijv. lucht) worden gevoerd! 🌊",
+          "midday": "De frequentie van een geluid is bepaald door de duur van de golf en de snelheid waarop de golf zich vervolgt.",
+          "evening": "Experiment: Maak golven met water in een bak en bestudeer de frequentie! 🧖‍♀️",
+          "materials": [
+            "Water, bak, meeten"
+          ],
+          "questions": [
+            "Wat zijn golven? Hoe worden ze gemaakt?"
+          ]
+        },
+        {
+          "day": 5,
+          "title": "Geluidscirkel en Frequenties",
+          "focus": "Wat is de geluidscirkel en hoe werkt het?",
+          "morning": "De geluidscirkel is een visuele represantatie van de frequentie van elk geluid! 🎵",
+          "midday": "De geluidscirkel wordt gebruikt om te bepalen welke frequenties in ons kan horen.",
+          "evening": "Experiment: Maak verschillende geluiden met instruments en bestudeer de geluidscirkel! 🎶",
+          "materials": [
+            "Instrument, geluidsopnamemerker"
+          ],
+          "questions": [
+            "Wat is de geluidscirkel? Hoe wordt het gebruikt?"
+          ]
+        },
+        {
+          "day": 6,
+          "title": "Frequenties in Nature",
+          "focus": "Hoe voorkomen frequenties zich in nature?",
+          "morning": "Frequenties zijn erg belangrijk in nature, bijvoorbeeld in vogelgesang en insectenroep! 🐦",
+          "midday": "Frequenties worden ook gebruikt door dieren om contact te maken en om hun omgeving te bestuderen.",
+          "evening": "Experiment: Luister naar vogelscherm en probeer de frequentie te identificeren! 🐤",
+          "materials": [
+            "Vogelscherm, meeten"
+          ],
+          "questions": [
+            "Hoe voorkomen frequenties zich in nature? Wat zijn hun belangrijkste toepassingen?"
+          ]
+        },
+        {
+          "day": 7,
+          "title": "Geluiden als Communicatie",
+          "focus": "Hoe worden geluiden gebruikt voor communicatie?",
+          "morning": "Dieren gebruiken geluiden om te communiceren, bijvoorbeeld om te roepen of om een signaal af te geven! 🐶",
+          "midday": "Mensen gebruiken ook geluiden om te communiceren, bijvoorbeeld door te praten of muziek te luisteren.",
+          "evening": "Experiment: Maak een communicatie-actie met vrienden en probeer verschillende geluiden te gebruiken! 👫",
+          "materials": [
+            "Microfoon, speakers, friends"
+          ],
+          "questions": [
+            "Hoe worden geluiden gebruikt voor communicatie? Welke vormen nemen ze aan in de natuur?"
+          ]
+        }
+      ]
+    },
+    {
+      "week": 4,
+      "title": "Licht & Optica",
+      "subtitle": "Licht & Optica — Reflectie, Breking, Kleuren",
+      "days": [
+        {
+          "day": 1,
+          "title": "De Spiegel van de Zon",
+          "focus": "Hoe werkt reflectie?",
+          "morning": "Wanneer zonlicht op een gladde oppervlak valt, wordt het gedeeltelijk backgevoerd en wordt opnieuw naar ons richting gericht. Dit noemt men reflectie. 🌞👀",
+          "midday": "Reflectie is belangrijk voor onze dagelijkse routine, zoals wassen of een spiegel gebruiken om onze look te controleren. ☁️",
+          "evening": "Experiment met een gladde oppervlak en de zon, waarna je de reflectie bekijkt in verschillende richtingen.",
+          "materials": [],
+          "questions": []
+        },
+        {
+          "day": 2,
+          "title": "De Klik van het Licht",
+          "focus": "Hoe werkt breking?",
+          "morning": "Wanneer licht door een transparante of glasoppervlakte heengaat, wordt het gedeeltelijk gebroken en verdeeld in meerdere delen. Dit noemt men breking. 🌈🔍",
+          "midday": "Breking is belangrijk voor de optische werking van brilleglazen of bietendoekjes.",
+          "evening": "Experiment met een ronde lens en licht, waarna je de verschillende delen van het gebroken licht bekijkt.",
+          "materials": [],
+          "questions": []
+        },
+        {
+          "day": 3,
+          "title": "De Kleuren van het Lichte",
+          "focus": "Hoe werken kleuren in licht?",
+          "morning": "Wanneer licht door een pigment of kleurvoerende materiaal heengaat, wordt het kleurgebruik mogelijk. Dit noemt men kleurbreking. 🌈🎨",
+          "midday": "Kleurbreking is belangrijk voor de optische werking van telescopiën of brilleglazen met lichte veranderingen.",
+          "evening": "Experiment met een prisma en licht, waarna je de verschillende kleuren van het gebroken licht bekijkt.",
+          "materials": [],
+          "questions": []
+        },
+        {
+          "day": 4,
+          "title": "Reflectie in Beweging",
+          "focus": "Hoe kan reflectie worden gebruikt om bewegingen te berekenen?",
+          "morning": "Door de reflecties van een bewegende object op een gladde oppervlak, kunnen we de richting en snelheid van het object berekenen. Dit noemt men kinematografie. 🏃‍♂️👀",
+          "midday": "Kinematografie is belangrijk voor ontwerpen in de filmindustrie of in de bouw van sportbanen.",
+          "evening": "Experiment met een gladde oppervlakte en een bewegende object, waarna je de reflecties berekent om kinematografie te illustreren.",
+          "materials": [],
+          "questions": []
+        },
+        {
+          "day": 5,
+          "title": "De Sterren van de Optica",
+          "focus": "Hoe werken reflectie, breking en kleurbreking samen?",
+          "morning": "Reflectie, breking en kleurbreking zijn allemaal belangrijk voor onze veranderingen in het licht.",
+          "midday": "Reflectie van sterren door een glasoppervlak kan de optische werking van telescopiën mogelijk maken.",
+          "evening": "Experiment met een ronde lens, prisma en zonlicht, waarna je de reflecties en breking van het licht bekijkt.",
+          "materials": [],
+          "questions": []
+        },
+        {
+          "day": 6,
+          "title": "De Spiegel van het Lichte",
+          "focus": "Hoe kan reflectie worden gebruikt om licht op te zoeken?",
+          "morning": "Reflectie is belangrijk om licht op te zoeken in duistere gebieden.",
+          "midday": "Reflectie kan ook worden gebruikt om een schaduw te volgen, zoals in de filmindustrie.",
+          "evening": "Experiment met een gladde oppervlakte en zonlicht, waarna je de reflecties in verschillende richtingen bekijkt.",
+          "materials": [],
+          "questions": []
+        },
+        {
+          "day": 7,
+          "title": "De Lente van de Optica",
+          "focus": "Wat zijn de toepassingen voor optische technologie?",
+          "morning": "Reflectie, breking en kleurbreking hebben verschillende toepassingen in onze dagelijkse routine.",
+          "midday": "Optische technologie is belangrijk voor onderwerpen zoals glasfabrikanten of brilleglazen.",
+          "evening": "Reflecteer op de toepassingen van optische technologie in jouw leven en de toekomstige ontwikkelingen.",
+          "materials": [],
+          "questions": []
+        }
+      ]
+    }
+  ],
+  "_locale": "nl",
+  "_generated": 1785421053179,
+  "_model": "llama3.2:3b"
+}

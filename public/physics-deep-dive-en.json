@@ -1,0 +1,477 @@
+{
+  "weeks": [
+    {
+      "week": 1,
+      "title": "Kinematics",
+      "subtitle": "Kinematics — Movement, Speed, Velocity, Acceleration",
+      "days": [
+        {
+          "day": 1,
+          "title": "\"Speedsters\"",
+          "focus": "Introduce the concept of speed and its measurement.",
+          "morning": "Did you know that cars can go up to 300 km/h? That's super fast! Speed is a measure of how far an object travels in a certain amount of time. 🚗💨",
+          "midday": "Speed is calculated by dividing the distance traveled by the time taken. For example, if a car travels 100 meters in 10 seconds, its speed is 10 meters per second (m/s). This can be represented as: Distance / Time = Speed.",
+          "evening": "Measure the speed of an object using a stopwatch and a ruler. Place a toy car on a straight surface and measure how far it travels in 5 seconds. Record your results.",
+          "materials": [
+            "Stopwatch",
+            "Ruler"
+          ],
+          "questions": [
+            "What is the unit of measurement for speed? Can you think of objects that can move at different speeds?"
+          ]
+        },
+        {
+          "day": 2,
+          "title": "\"Velocity Vikings\"",
+          "focus": "Explore the concept of velocity and its relationship to speed.",
+          "morning": "Did you know that a car's speed can change even if it's moving in a straight line? That's because an object can have a velocity of zero while still being stationary! Velocity is a measure of an object's speed in a specific direction. 🚗🔄",
+          "midday": "Velocity is calculated by multiplying the distance traveled by the time taken, and then dividing by the unit of time (e.g., seconds). For example, if a car travels 100 meters in 10 seconds, its velocity is 10 m/s. This can be represented as: Distance / Time = Speed",
+          "evening": "Measure the velocity of an object using a stopwatch and a ruler. Place a toy car on a straight surface and measure how far it travels in 5 seconds while also recording the direction of motion.",
+          "materials": [
+            "Stopwatch",
+            "Ruler",
+            "Compass"
+          ],
+          "questions": [
+            "What is the difference between speed and velocity? Can you think of scenarios where one would be more important than the other?"
+          ]
+        },
+        {
+          "day": 3,
+          "title": "\"Acceleration Explorers\"",
+          "focus": "Introduce the concept of acceleration and its relationship to motion.",
+          "morning": "Did you know that an object can start from rest and quickly accelerate? That's because an object can have a positive or negative acceleration! Acceleration is a measure of how quickly an object changes its speed. 🚀👍",
+          "midday": "Acceleration is calculated by dividing the change in velocity by the time taken. For example, if an object accelerates from 0 m/s to 10 m/s in 5 seconds, its acceleration is (10 - 0) / 5 = 2 m/s^2.",
+          "evening": "Create a graph showing how an object's speed changes over time. Use a toy car and a stopwatch to measure the speed at regular intervals.",
+          "materials": [
+            "Stopwatch",
+            "Ruler",
+            "Graph paper"
+          ],
+          "questions": [
+            "What is acceleration, and why is it important? Can you think of objects that have constant or changing accelerations?"
+          ]
+        },
+        {
+          "day": 4,
+          "title": "\"Motion Mystery\"",
+          "focus": "Analyze real-world motion using kinematic equations.",
+          "morning": "Did you know that a ball thrown upwards can be described by the equation s = ut + (1/2)gt^2? This equation shows how distance, initial velocity, and time are related! 🏀👀",
+          "midday": "Use the equation to calculate the height of a thrown ball. Assume an initial velocity of 20 m/s and a time of 5 seconds.",
+          "evening": "Use online resources or worksheets to analyze real-world motion problems using kinematic equations. Choose a scenario that interests you and try to solve it.",
+          "materials": [
+            "Online resources",
+            "Worksheets"
+          ],
+          "questions": [
+            "How do you use kinematic equations to model real-world motion? Can you think of scenarios where these equations can be simplified or modified?"
+          ]
+        },
+        {
+          "day": 5,
+          "title": "\"Graphing Velocity\"",
+          "focus": "Use graphs to visualize velocity and acceleration.",
+          "morning": "Did you know that a graph of velocity over time can help us understand how fast an object is moving? 📊🚀",
+          "midday": "Plot a graph of velocity using data collected from experiments. Identify key features such as maximum and minimum values, and areas where the velocity changes sign.",
+          "evening": "Create a graph showing acceleration over time. Use a toy car and a stopwatch to measure the acceleration at regular intervals.",
+          "materials": [
+            "Graph paper",
+            "Pencil"
+          ],
+          "questions": [
+            "How can graphs be used to analyze motion? Can you think of ways to use graphs in real-world applications?"
+          ]
+        },
+        {
+          "day": 6,
+          "title": "\"Kinematic Chains\"",
+          "focus": "Connect kinematics concepts to real-world scenarios.",
+          "morning": "Did you know that the motion of a roller coaster can be described using kinematic equations? The acceleration and velocity of the car are related, but so are the forces acting on it! 🎠👍",
+          "midday": "Research a real-world scenario (e.g., a spacecraft launch or a bicycle ride) and describe how kinematics concepts apply. Identify key factors such as speed, velocity, and acceleration.",
+          "evening": "Create a diagram showing the motion of an object using kinematic equations. Use a toy car and a ruler to measure distances and velocities at regular intervals.",
+          "materials": [
+            "Ruler",
+            "Pencil"
+          ],
+          "questions": [
+            "How do you connect kinematics concepts to real-world scenarios? Can you think of ways to apply these concepts in everyday life?"
+          ]
+        },
+        {
+          "day": 7,
+          "title": "\"Kinematic Review\"",
+          "focus": "Review key kinematics concepts and prepare for the next week.",
+          "morning": "Did you know that speed, velocity, acceleration, and distance are all related by fundamental equations? 🤓👍",
+          "midday": "Take a quick quiz to review key kinematics concepts. Focus on questions involving speed, velocity, acceleration, and motion diagrams.",
+          "evening": "Prepare for the next week's lessons by reviewing your notes and thinking about how you can apply kinematics concepts in different scenarios.",
+          "materials": [
+            "Review notes",
+            "Pencil"
+          ],
+          "questions": [
+            "What are some common errors when working with kinematic equations? Can you think of ways to improve your understanding of these concepts?"
+          ]
+        }
+      ]
+    },
+    {
+      "week": 2,
+      "title": "Forces & Energy",
+      "subtitle": "Forces & Energy — Push, Pull, Friction, Gravity",
+      "days": [
+        {
+          "day": 1,
+          "title": "\"Force Frenzy\"",
+          "focus": "To understand the difference between push and pull forces.",
+          "morning": "When you're playing with a ball, what happens when someone pushes it to you? 🏀 The force of the push propels the ball towards you. On the other hand, if someone pulls the ball to you, the direction of the force is opposite. Pulling and pushing are like two different arms of a force!",
+          "midday": "When we say \"force\", we mean a push or pull that can make things move or change their motion. There's no movement without force! Think about how the Earth pulls you towards its surface with gravity, or how your friends might pull you when they're playing tag.",
+          "evening": "",
+          "materials": [
+            "Ball",
+            "Tape measure",
+            "Stopwatch"
+          ],
+          "questions": [
+            "What happens when you push the ball versus pulling it? How does the distance change?"
+          ]
+        },
+        {
+          "day": 2,
+          "title": "\"Friction Fights\"",
+          "focus": "To understand the concept of friction and its effects on motion.",
+          "morning": "Have you ever tried to roll a marble across the floor, but it came to a stop suddenly? 🤔 That's because of friction! Friction is like an invisible force that opposes motion between surfaces.",
+          "midday": "There are two types of friction: static and kinetic. Static friction keeps objects from moving when they're not in contact with another surface. Kinetic friction slows down or stops the motion of a moving object.",
+          "evening": "",
+          "materials": [
+            "Marbles",
+            "Ramps",
+            "Tape measure"
+          ],
+          "questions": [
+            "What's the difference between static and kinetic friction? How does it affect motion?"
+          ]
+        },
+        {
+          "day": 3,
+          "title": "\"Gravity's Grip\"",
+          "focus": "To understand how gravity affects objects on Earth.",
+          "morning": "Imagine you're standing on top of a hill – what happens to your body weight as you go down? ⛰️ Gravity is always pulling us towards the center of the Earth, no matter where we are!",
+          "midday": "Weight is actually force that pulls objects toward the ground. The more massive an object, the greater its weight.",
+          "evening": "",
+          "materials": [
+            "Heavy object",
+            "Scale/spring balance",
+            "Stopwatch"
+          ],
+          "questions": [
+            "What's weight? How does gravity affect objects of different sizes?"
+          ]
+        },
+        {
+          "day": 4,
+          "title": "\"Energy Escapes\"",
+          "focus": "To understand the concept of energy transfer and conservation.",
+          "morning": "When you pedal a bike or run, what happens to your body's energy? 🚴‍♀️ Energy can't be created or destroyed, only transformed from one type to another. Think about how a bicycle converts chemical energy into kinetic energy.",
+          "midday": "There are several types of energy: potential (stored), kinetic (in motion), thermal (heat), and more. Energy transfer happens when we use forces like friction or gravity to change the form of energy.",
+          "evening": "",
+          "materials": [
+            "Bicycle",
+            "Friend",
+            "Stopwatch"
+          ],
+          "questions": [
+            "What's energy conservation? How does it relate to forces like friction?"
+          ]
+        },
+        {
+          "day": 5,
+          "title": "\"Force Match\"",
+          "focus": "To understand the concept of equivalent forces and Newton's Third Law.",
+          "morning": "Imagine you're playing tug-of-war with friends – what happens when you both pull with equal force? 🤹‍♀️ When two forces are equal, they can cancel each other out!",
+          "midday": "According to Newton's Third Law, for every action, there is an equal and opposite reaction. This means that the force exerted on object A must be matched by an equal force exerted back onto object B.",
+          "evening": "",
+          "materials": [
+            "Rope",
+            "Pairs"
+          ],
+          "questions": [
+            "What's Newton's Third Law? How does it relate to forces in tug-of-war?"
+          ]
+        },
+        {
+          "day": 6,
+          "title": "\"Gravity Games\"",
+          "focus": "To understand how gravity affects objects with varying masses.",
+          "morning": "Imagine you're on a trampoline – what happens when someone jumps onto it? ⛹️ Gravity pulls the jumper towards the center of the Earth, just like on solid ground!",
+          "midday": "Objects with different weights or masses have different gravitational experiences. The more massive an object, the stronger its pull on us and other objects.",
+          "evening": "",
+          "materials": [
+            "Two balls",
+            "Stopwatch"
+          ],
+          "questions": [
+            "How does mass affect an object's gravitational pull? What happens when you drop objects with different weights?"
+          ]
+        },
+        {
+          "day": 7,
+          "title": "\"Force Challenge\"",
+          "focus": "To apply understanding of forces and energy to real-world problems.",
+          "morning": "Imagine you're designing a ramp for a marble run – what factors should you consider when creating the slope? 🏔️ Forces like friction, gravity, and potential energy all come into play!",
+          "midday": "When solving problems related to forces and energy, think about how they interact with each other. Consider variables like mass, velocity, and surface roughness.",
+          "evening": "",
+          "materials": [
+            "Marbles",
+            "Ramps",
+            "Various surfaces"
+          ],
+          "questions": [
+            "How do forces like friction and gravity affect the motion of objects in different environments? Can you design an efficient marble run?"
+          ]
+        }
+      ]
+    },
+    {
+      "week": 3,
+      "title": "Waves & Sound",
+      "subtitle": "Waves & Sound — Vibrations, Pitch, Amplitude",
+      "days": [
+        {
+          "day": 1,
+          "title": "\"Vibration Vibes\"",
+          "focus": "Understanding how vibrations create sound waves.",
+          "morning": "When you tap on a guitar string or drum, it vibrates and produces a sound 🎸🎶",
+          "midday": "Vibrations can be caused by various objects, such as strings, membranes, or even the human voice. The rate at which an object vibrates affects its pitch.",
+          "evening": "",
+          "materials": [
+            "Guitar strings",
+            "Online pitch-measuring tool or app"
+          ],
+          "questions": [
+            "What is the relationship between vibration rate and pitch?",
+            "Can you predict which string will produce a higher-pitched sound?"
+          ]
+        },
+        {
+          "day": 2,
+          "title": "\"Amplitude Adventure\"",
+          "focus": "Understanding how amplitude affects sound waves.",
+          "morning": "When you throw a stone into a calm lake, it creates ripples that gradually decrease in size as they spread out across the water 🌊",
+          "midday": "Amplitude is a measure of how far a sound wave's particles move from their equilibrium position. Larger amplitude means louder sounds, while smaller amplitude results in softer sounds 🔇",
+          "evening": "",
+          "materials": [
+            "Clap",
+            "Drum",
+            "Metronome"
+          ],
+          "questions": [
+            "How does the amplitude of a sound wave relate to its loudness?",
+            "Can you create a soft sound by clapping your hands gently?"
+          ]
+        },
+        {
+          "day": 3,
+          "title": "\"Waves in Motion\"",
+          "focus": "Understanding how waves interact and transfer energy.",
+          "morning": "When you throw a beach ball into the air, it creates a circular motion as it rises and falls 🏖️",
+          "midday": "Sound waves have three main characteristics: frequency (pitch), amplitude (loudness), and wavelength (distance between two consecutive peaks).",
+          "evening": "",
+          "materials": [
+            "Metal washer",
+            "Glass slide",
+            "Ruler or caliper"
+          ],
+          "questions": [
+            "What is the relationship between wavelength and the speed of sound?",
+            "Can you create a longer-wavelength sound by using a larger metal washer?"
+          ]
+        },
+        {
+          "day": 4,
+          "title": "\"Resonance Rendezvous\"",
+          "focus": "Understanding how objects resonate at specific frequencies.",
+          "morning": "When you play a piano, certain notes produce resonant vibrations in the instrument 🎹",
+          "midday": "Resonance occurs when an object vibrates at its natural frequency, producing an enhanced response to external stimuli.",
+          "evening": "",
+          "materials": [
+            "Metal tube",
+            "Tuning fork"
+          ],
+          "questions": [
+            "What is resonance, and how does it enhance sound quality?",
+            "Can you create a resonant effect using a glass bottle?"
+          ]
+        },
+        {
+          "day": 5,
+          "title": "\"Pitch Perfect\"",
+          "focus": "Understanding how pitch relates to frequency.",
+          "morning": "When you play a musical instrument, different notes have distinct pitches 🎵",
+          "midday": "Pitch is directly related to frequency. As the frequency increases, so does the pitch.",
+          "evening": "",
+          "materials": [
+            "Piano or keyboard",
+            "Online pitch-measuring tool or app"
+          ],
+          "questions": [
+            "What is the relationship between frequency and pitch?",
+            "Can you predict which note will produce a higher-pitched sound?"
+          ]
+        },
+        {
+          "day": 6,
+          "title": "\"Sound Scavenger\"",
+          "focus": "Finding examples of vibrations, amplitude, and resonance in everyday life.",
+          "morning": "As you walk through your neighborhood or school, observe the sounds around you 🌆",
+          "midday": "Reflect on how these concepts are used in various contexts, such as music, engineering, and even everyday activities.",
+          "evening": "",
+          "materials": [
+            "Smartphone",
+            "Online pitch-measuring tool or app"
+          ],
+          "questions": [
+            "Can you find examples of vibrations in your daily life?",
+            "How do everyday activities use resonance?"
+          ]
+        },
+        {
+          "day": 7,
+          "title": "\"Sound Symphony\"",
+          "focus": "Creating a symphony using different frequencies, amplitudes, and resonances.",
+          "morning": "As you create your own sound symphony, experiment with various frequencies and amplitudes 🎵",
+          "midday": "",
+          "evening": "",
+          "materials": [
+            "Various instruments or objects"
+          ],
+          "questions": [
+            "How can you use frequencies and amplitudes to create a harmonious sound?",
+            "Can you compose a symphony that showcases your understanding of these concepts?"
+          ]
+        }
+      ]
+    },
+    {
+      "week": 4,
+      "title": "Light & Optics",
+      "subtitle": "Light & Optics — Reflection, Refraction, Colors",
+      "days": [
+        {
+          "day": 1,
+          "title": "\"Shiny Surfaces\"",
+          "focus": "Explore how light behaves when it hits different surfaces.",
+          "morning": "When you hold a mirror in front of the sun, you see your reflection. This is because light is bouncing back from the surface of the mirror 🌞👀",
+          "midday": "Different materials have different properties that affect how light interacts with them. This is why we see some colors more than others on certain surfaces.",
+          "evening": "",
+          "materials": [
+            "Mirror",
+            "Sun",
+            "Smooth surface"
+          ],
+          "questions": [
+            "What is reflection? How does it affect the appearance of an object?"
+          ]
+        },
+        {
+          "day": 2,
+          "title": "\"Rainbow in a Bottle\"",
+          "focus": "Discover how light refraction works when it passes through different materials.",
+          "morning": "When you put a straw in a bottle filled with water and shine a light through it, you can create a mini rainbow. This happens because light is bending as it passes from air into the water 🌈💧",
+          "midday": "Refraction occurs when light passes from one material to another with a different optical density. This bending of light causes colors to separate and form a rainbow.",
+          "evening": "",
+          "materials": [
+            "Straw",
+            "Bottle",
+            "Water"
+          ],
+          "questions": [
+            "What is refraction? How does it create rainbows?"
+          ]
+        },
+        {
+          "day": 3,
+          "title": "\"Color Changer\"",
+          "focus": "Investigate how different materials affect the colors we see.",
+          "morning": "When you wear glasses with colored lenses, you can change the way objects appear. This happens because light interacts differently with each color 🎨👓",
+          "midday": "Different materials have unique properties that affect how we perceive colors. For example, pigments in paint absorb certain wavelengths of light and reflect others, creating the appearance of color.",
+          "evening": "",
+          "materials": [
+            "Colored glasses",
+            "Prism",
+            "Light source"
+          ],
+          "questions": [
+            "How do materials affect the way we see colors? What happens when light interacts with pigments?"
+          ]
+        },
+        {
+          "day": 4,
+          "title": "\"Frog Eye View\"",
+          "focus": "Observe and explain how different angles affect our perception of objects.",
+          "morning": "When you look at a frog's eyes, you can see that they have a unique shape. This allows the frog to see almost in all directions 🔍🐸",
+          "midday": "Our brain processes visual information by combining data from multiple angles and perspectives. This is why we can see things more clearly when viewing them from different angles.",
+          "evening": "",
+          "materials": [
+            "Mirror",
+            "Chair",
+            "Small object"
+          ],
+          "questions": [
+            "How do angles affect our perception of objects? What happens when we change our view?"
+          ]
+        },
+        {
+          "day": 5,
+          "title": "\"Rainbow Walk\"",
+          "focus": "Discover how light behaves when it passes through a prism or glass of water at different angles.",
+          "morning": "When you shine a flashlight through a prism, you can create a mini rainbow. The angle of the light affects which colors are most prominent 🌈💡",
+          "midday": "The position of the observer (where we stand) affects how much of the visible spectrum is reflected or refracted. This is why we see different colors at different angles.",
+          "evening": "",
+          "materials": [
+            "Prism",
+            "Flashlight",
+            "White wall"
+          ],
+          "questions": [
+            "How does the angle of light affect refraction? What happens when we move around?"
+          ]
+        },
+        {
+          "day": 6,
+          "title": "\"Prism Puzzle\"",
+          "focus": "Investigate and explain the concept of dispersion, which creates a rainbow effect.",
+          "morning": "When you shine a flashlight through a prism, you see a mini rainbow. This is because different wavelengths (colors) are being refracted at slightly different angles 🌈💡",
+          "midday": "Dispersion occurs when light passes through a material and is split into its individual colors. This happens because each wavelength has a unique speed in that material.",
+          "evening": "",
+          "materials": [
+            "Prism",
+            "Flashlight",
+            "Colored paper"
+          ],
+          "questions": [
+            "What is dispersion? How does it create a rainbow?"
+          ]
+        },
+        {
+          "day": 7,
+          "title": "\"Color Hunt\"",
+          "focus": "Explore real-life examples of reflection, refraction, and dispersion in nature.",
+          "morning": "When you walk outside on a sunny day, look for objects that reflect or refract light. You might notice how different materials affect the way we see colors 🌞🌿",
+          "midday": "Reflection, refraction, and dispersion are all important aspects of how light interacts with our environment. These natural wonders remind us of the beauty and complexity of light and color.",
+          "evening": "",
+          "materials": [
+            "Objects that reflect or refract light",
+            "Camera",
+            "Research resources"
+          ],
+          "questions": [
+            "How do natural phenomena demonstrate reflection, refraction, and dispersion? What are some examples you've found in nature?"
+          ]
+        }
+      ]
+    }
+  ],
+  "_locale": "en",
+  "_generated": 1785421196584,
+  "_model": "llama3.2:3b"
+}

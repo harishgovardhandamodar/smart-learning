@@ -322,6 +322,7 @@ import {
   hasPhysicsDeepDive,
   loadPhysicsDeepDive,
   clearPhysicsDeepDive,
+  initPhysicsDeepDive,
 } from '../services/physicsGenerator'
 import { getDefaultModel, getModels } from '../services/ollama'
 
@@ -414,8 +415,9 @@ function doRemoveKid() {
   loadDashboard()
 }
 
-function checkGenStatus() {
-  genReady.value = hasPhysicsDeepDive()
+async function checkGenStatus() {
+  const data = await initPhysicsDeepDive(locale.value)
+  genReady.value = !!data
 }
 
 async function generatePhysics() {
@@ -431,10 +433,10 @@ async function generatePhysics() {
   }
 }
 
-function loadDashboard() {
+async function loadDashboard() {
   hasExistingPin.value = hasParentPin()
   family.value = getFamilyStats()
-  checkGenStatus()
+  await checkGenStatus()
   availableModels.value = getModels()
   genModel.value = getDefaultModel() || 'nemotron-3-super:latest'
 }

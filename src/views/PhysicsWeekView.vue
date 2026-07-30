@@ -206,6 +206,7 @@ import {
   loadPhysicsDeepDive,
   hasPhysicsDeepDive,
   clearPhysicsDeepDive,
+  initPhysicsDeepDive,
 } from '../services/physicsGenerator'
 
 const t = inject('t')
@@ -433,10 +434,8 @@ onMounted(async () => {
     tutorMessages.value.push({ role: 'assistant', content: t('physics.tutorWelcome') })
   }
 
-  if (hasPhysicsDeepDive()) {
-    aiData.value = loadPhysicsDeepDive()
-    if (!aiData.value) clearPhysicsDeepDive()
-  }
+  aiData.value = await initPhysicsDeepDive(locale.value)
+  if (!aiData.value && hasPhysicsDeepDive()) clearPhysicsDeepDive()
 })
 </script>
 

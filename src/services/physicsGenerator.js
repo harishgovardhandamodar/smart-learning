@@ -162,3 +162,43 @@ export function hasPhysicsDeepDive() {
 export function clearPhysicsDeepDive() {
   storage.remove(STORAGE_KEY)
 }
+
+let loadedFromFile = false
+
+function publicFileForLocale(locale) {
+  return locale === 'nl' ? '/physics-deep-dive-nl.json' : '/physics-deep-dive-en.json'
+}
+
+export async function loadFromPublicFile(locale) {
+  if (loadedFromFile) return
+  loadedFromFile = true
+
+  if (hasPhysicsDeepDive()) return
+
+  const urls = [
+    publicFileForLocale(locale || 'en'),
+    '/physics-deep-dive.json',
+  ]
+
+  for (const url of urls) {
+    try {
+      const res = await fetch(url)
+      if (!res.ok) continue
+
+      const data = await res.json()
+      if (!data.weeks || !Array.isArray(data.weeks)) continue
+
+      data._locale = data._locale || locale || 'en'
+      data._loadedFromFile = true
+      storage.set(STORAGE_KEY, data)
+      console.log(`[physicsGenerator] loaded from ${url}`)
+      return
+    } catch {
+    }
+  }
+}
+
+export async function initPhysicsDeepDive(locale) {
+  await loadFromPublicFile(locale)
+  return loadPhysicsDeepDive()
+}
