@@ -248,7 +248,7 @@ const quickPrompts = computed(() => [
 const displayTitle = computed(() => {
   if (!aiData.value) return ''
   const w = aiData.value.weeks.find(w => w.week === activeWeek.value)
-  return w ? `🔬 ${w.title}` : ''
+  return w ? w.title : ''
 })
 
 const displaySubtitle = computed(() => {
