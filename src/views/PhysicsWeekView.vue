@@ -545,7 +545,7 @@ onMounted(async () => {
 .pw-body {
   display: grid;
   gap: 1.5rem;
-  grid-template-columns: 420px 1fr;
+  grid-template-columns: 520px 1fr;
 }
 @media (max-width: 900px) {
   .pw-body { grid-template-columns: 1fr; }
