@@ -56,6 +56,7 @@ export default {
     welcome: (t) => `Welkom bij ${t}!`,
     askFoxy: (t) => `Vraag Foxy alles over ${t}!`,
     generatingMindMap: 'Mindmap wordt gegenereerd...',
+    searchingImage: 'Afbeelding zoeken...',
     model: 'Model:',
     ollamaWarning: 'Ollama niet verbonden. Start',
     placeholder: (t) => `Vraag over ${t}...`,

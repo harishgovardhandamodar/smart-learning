@@ -56,6 +56,7 @@ export default {
     welcome: (t) => `Welcome to ${t}!`,
     askFoxy: (t) => `Ask Foxy anything about ${t}!`,
     generatingMindMap: 'Generating mind map...',
+    searchingImage: 'Searching for an image...',
     model: 'Model:',
     ollamaWarning: 'Ollama not connected. Please start',
     placeholder: (t) => `Ask about ${t}...`,

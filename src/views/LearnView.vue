@@ -49,6 +49,15 @@
               <span class="loading-spinner"></span>
               {{ t('learn.generatingMindMap') }}
             </div>
+
+            <div v-if="msg.role === 'assistant' && images.get(index)" class="topic-image">
+              <img :src="images.get(index).url" :alt="images.get(index).title" />
+              <span class="image-caption">{{ images.get(index).caption }}</span>
+            </div>
+            <div v-else-if="msg.role === 'assistant' && imageLoading.get(index)" class="mindmap-loading">
+              <span class="loading-spinner"></span>
+              {{ t('learn.searchingImage') }}
+            </div>
           </template>
 
           <div v-if="isLoading" class="message assistant">
@@ -95,6 +104,7 @@ import { ref, computed, nextTick, onMounted, onUnmounted, inject } from 'vue'
 import { useRoute } from 'vue-router'
 import { STEM_TOPICS } from '../data/topics'
 import { sendMessage as ollamaSend, generateMindMap, getModels, getDefaultModel } from '../services/ollama'
+import { fetchTopicImage, extractSearchQuery } from '../services/imageSearch'
 import { trackMessage, trackSessionStart, trackSessionEnd } from '../data/kids'
 import MindMap from '../components/MindMap.vue'
 
@@ -117,6 +127,8 @@ const models = ref([])
 
 const mindMaps = ref(new Map())
 const mindMapLoading = ref(new Map())
+const images = ref(new Map())
+const imageLoading = ref(new Map())
 
 const suggestions = computed(() => {
   const subs = topic.value.subtopics
@@ -155,6 +167,20 @@ function findUserQuestion(assistantIndex) {
 async function scrollToBottom() {
   await nextTick()
   if (messagesContainer.value) messagesContainer.value.scrollTop = messagesContainer.value.scrollHeight
+}
+
+async function fetchImage(msgIndex, userQuestion) {
+  const query = extractSearchQuery(userQuestion, topic.value.title)
+  imageLoading.value.set(msgIndex, true)
+  await nextTick()
+  try {
+    const result = await fetchTopicImage(query, locale.value)
+    if (result) images.value.set(msgIndex, result)
+  } catch {
+  } finally {
+    imageLoading.value.set(msgIndex, false)
+    await scrollToBottom()
+  }
 }
 
 async function fetchMindMap(msgIndex) {
@@ -198,7 +224,9 @@ async function sendMessage(text) {
       messages.value[msgIndex].content = assistantContent
       await scrollToBottom()
     }
+    const userMsg = messages.value[msgIndex - 1]?.content || content
     fetchMindMap(msgIndex)
+    fetchImage(msgIndex, userMsg)
   } catch (error) {
     messages.value.push({ role: 'assistant', content: `Oops! Something went wrong. Error: ${error.message}` })
   } finally {
@@ -294,6 +322,12 @@ onUnmounted(() => {
 .mindmap-loading { display: flex; align-items: center; gap: 8px; padding: 8px 16px; margin-left: 52px; font-size: 0.8rem; color: var(--text-muted); font-family: var(--font-display); font-weight: 500; }
 .loading-spinner { width: 16px; height: 16px; border: 2.5px solid rgba(108, 92, 231, 0.15); border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
+
+.topic-image {
+  margin-left: 52px; margin-top: 8px; border-radius: 12px; overflow: hidden; max-width: 400px; border: 2px solid var(--border); background: var(--option-bg);
+  img { width: 100%; height: auto; display: block; }
+  .image-caption { display: block; padding: 6px 12px; font-size: 0.75rem; color: var(--text-muted); font-style: italic; font-family: var(--font-display); }
+}
 
 @media (max-width: 640px) { .message { max-width: 95%; } .chat-messages { padding: 16px; } .empty-state h2 { font-size: 1.3rem; } }
 </style>
