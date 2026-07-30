@@ -252,6 +252,42 @@
             </div>
           </div>
 
+          <!-- Physics Curriculum Generator -->
+          <div class="card physics-gen-card animate-slide-up">
+            <h3 class="card-title">🔬 {{ t('dashboard.physicsGenTitle') }}</h3>
+            <p class="gen-desc">{{ t('dashboard.physicsGenDesc') }}</p>
+
+            <div v-if="genReady" class="gen-ready">
+              <span class="gen-ready-icon">✅</span>
+              <span>{{ t('dashboard.physicsGenReady') }}</span>
+              <router-link to="/engine/physics-week" class="btn btn-sm btn-primary">
+                👀 {{ t('dashboard.physicsGenView') }}
+              </router-link>
+            </div>
+
+            <div v-else-if="genLoading" class="gen-progress">
+              <span class="loading-spinner"></span>
+              <p>{{ t('dashboard.physicsGenProgress') }}</p>
+              <p class="gen-hint">{{ t('dashboard.physicsGenHint') }}</p>
+            </div>
+
+            <div v-else-if="genError" class="gen-error">
+              <p>⚠️ {{ genError }}</p>
+              <button class="btn btn-sm btn-danger" @click="genError = ''">{{ t('dashboard.tryAgain') }}</button>
+            </div>
+
+            <div v-else class="gen-form">
+              <select v-model="genModel" class="gen-select">
+                <optgroup :label="t('dashboard.genModelLabel')">
+                  <option v-for="m in availableModels" :key="m.name" :value="m.name">{{ m.name }}</option>
+                </optgroup>
+              </select>
+              <button class="btn btn-primary btn-gen" @click="generatePhysics" :disabled="genLoading">
+                🚀 {{ t('dashboard.physicsGenButton') }}
+              </button>
+            </div>
+          </div>
+
         </template>
       </template>
 
@@ -281,6 +317,13 @@ import {
   removeKidAndActivity,
 } from '../data/kids'
 import { TOPIC_NAMES } from '../data/funFacts'
+import {
+  generatePhysicsDeepDive,
+  hasPhysicsDeepDive,
+  loadPhysicsDeepDive,
+  clearPhysicsDeepDive,
+} from '../services/physicsGenerator'
+import { getDefaultModel, getModels } from '../services/ollama'
 
 const t = inject('t')
 const locale = inject('locale')
@@ -293,6 +336,11 @@ const family = ref(null)
 const expandedKid = ref(null)
 const kidToRemove = ref(null)
 const changingPin = ref(false)
+const genLoading = ref(false)
+const genError = ref('')
+const genModel = ref('')
+const genReady = ref(false)
+const availableModels = ref([])
 
 const familyMaxBar = computed(() => {
   if (!family.value) return 1
@@ -366,9 +414,29 @@ function doRemoveKid() {
   loadDashboard()
 }
 
+function checkGenStatus() {
+  genReady.value = hasPhysicsDeepDive()
+}
+
+async function generatePhysics() {
+  genLoading.value = true
+  genError.value = ''
+  try {
+    const result = await generatePhysicsDeepDive('en', genModel.value)
+    genReady.value = true
+  } catch (err) {
+    genError.value = err.message || String(err)
+  } finally {
+    genLoading.value = false
+  }
+}
+
 function loadDashboard() {
   hasExistingPin.value = hasParentPin()
   family.value = getFamilyStats()
+  checkGenStatus()
+  availableModels.value = getModels()
+  genModel.value = getDefaultModel() || 'nemotron-3-super:latest'
 }
 
 function getTopicIcon(topic) {
@@ -607,6 +675,34 @@ onMounted(loadDashboard)
 
 /* ── Admin ── */
 .admin-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+
+.physics-gen-card { border-left: 4px solid var(--primary, #6C5CE7); }
+.gen-desc { font-size: 0.85rem; color: var(--text-light); margin-bottom: 16px; }
+.gen-form { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.gen-select {
+  padding: 0.5rem 0.75rem; border: 2px solid var(--border, #e2e8f0); border-radius: 10px;
+  font-size: 0.85rem; background: var(--input-bg); color: var(--text); outline: none;
+  min-width: 200px;
+}
+.btn-gen { padding: 0.5rem 1.25rem; font-size: 0.85rem; }
+.gen-progress { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 12px; }
+.gen-progress p { font-size: 0.85rem; color: var(--text-light); margin: 0; }
+.gen-hint { font-size: 0.78rem; color: var(--text-muted); }
+.gen-error { padding: 12px; background: #fef2f2; border-radius: 10px; text-align: center; }
+.gen-error p { color: #dc2626; margin: 0 0 8px; font-size: 0.85rem; }
+.gen-ready {
+  display: flex; align-items: center; gap: 12px; padding: 12px; flex-wrap: wrap;
+  border: 1px solid #bbf7d0; border-radius: 10px; background: #f0fdf4;
+}
+.gen-ready-icon { font-size: 1.2rem; }
+.gen-ready span { font-size: 0.85rem; color: #166534; font-weight: 600; flex: 1; }
+.gen-ready .btn { flex-shrink: 0; }
+.loading-spinner {
+  display: inline-block; width: 20px; height: 20px;
+  border: 2.5px solid rgba(108, 92, 231, 0.15); border-top-color: var(--primary);
+  border-radius: 50%; animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
 
 /* ── Modal ── */
 .modal-overlay {
