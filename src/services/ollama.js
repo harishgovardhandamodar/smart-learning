@@ -1,7 +1,6 @@
 import { storage } from '../utils/storage'
 
-const HIVE_SERVER_URL = import.meta.env.VITE_HIVE_SERVER_URL || 'http://localhost:8081'
-const API_BASE = `${HIVE_SERVER_URL}/v1`
+const API_BASE = `http://${window.location.hostname}:8081/v1`
 
 const headers = { 'Content-Type': 'application/json' }
 

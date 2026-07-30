@@ -1,7 +1,6 @@
 import { getDefaultModel } from './ollama'
 
-const HIVE_SERVER_URL = import.meta.env.VITE_HIVE_SERVER_URL || 'http://localhost:8081'
-const API_BASE = `${HIVE_SERVER_URL}/v1`
+const API_BASE = `http://${window.location.hostname}:8081/v1`
 const headers = { 'Content-Type': 'application/json' }
 
 const PHYSICS_TUTOR_SYSTEM_EN = `You are Foxy 🦊, a world-class physics educator specializing in inquiry-based, hands-on learning for children aged 10-18.
