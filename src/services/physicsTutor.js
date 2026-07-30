@@ -1,7 +1,8 @@
-import { Ollama } from 'ollama'
 import { getDefaultModel } from './ollama'
 
-const ollama = new Ollama({ host: 'http://localhost:11434' })
+const HIVE_SERVER_URL = import.meta.env.VITE_HIVE_SERVER_URL || 'http://localhost:8081'
+const API_BASE = `${HIVE_SERVER_URL}/v1`
+const headers = { 'Content-Type': 'application/json' }
 
 const PHYSICS_TUTOR_SYSTEM_EN = `You are Foxy 🦊, a world-class physics educator specializing in inquiry-based, hands-on learning for children aged 10-18.
 
@@ -43,16 +44,46 @@ export async function sendPhysicsMessage(messages, model, locale = 'en') {
   const selectedModel = model || getDefaultModel()
   const systemPrompt = locale === 'nl' ? PHYSICS_TUTOR_SYSTEM_NL : PHYSICS_TUTOR_SYSTEM_EN
 
-  const response = await ollama.chat({
-    model: selectedModel,
-    messages: [
-      { role: 'system', content: systemPrompt },
-      ...messages,
-    ],
-    stream: true,
+  const res = await fetch(`${API_BASE}/chat/completions`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({
+      model: selectedModel,
+      messages: [
+        { role: 'system', content: systemPrompt },
+        ...messages,
+      ],
+      stream: true,
+    }),
   })
+  if (!res.ok) throw new Error(`API error: ${res.status}`)
+  const reader = res.body.getReader()
+  const decoder = new TextDecoder()
+  let buffer = ''
 
-  return response
+  return {
+    [Symbol.asyncIterator]() { return this },
+    async next() {
+      while (true) {
+        const { done, value } = await reader.read()
+        if (done) { buffer = ''; return { done: true, value: undefined } }
+        buffer += decoder.decode(value, { stream: true })
+        const lines = buffer.split('\n')
+        buffer = lines.pop() || ''
+        for (const line of lines) {
+          if (line.startsWith('data: ')) {
+            const data = line.slice(6)
+            if (data === '[DONE]') return { done: true, value: undefined }
+            try {
+              const parsed = JSON.parse(data)
+              const content = parsed.choices?.[0]?.delta?.content || ''
+              if (content) return { done: false, value: { message: { content } } }
+            } catch { /* skip */ }
+          }
+        }
+      }
+    },
+  }
 }
 
 export async function generatePhysicsChallenge(topic, model, locale = 'en') {
@@ -62,13 +93,18 @@ export async function generatePhysicsChallenge(topic, model, locale = 'en') {
     ? `Genereer een kort, spannend natuurkunde-uitdaging voor een kind van 10-18 jaar over onderwerp: ${topic}. Stel 3 Sokratische vragen die hen helpen het concept zelf te ontdekken. Geef een eenvoudig huishoudelexperiment dat ze NU kunnen proberen. Houd het leuk en motiverend. Max 200 woorden.`
     : `Generate a short, exciting physics challenge for a kid aged 10-18 about the topic: ${topic}. Ask 3 Socratic questions to help them discover the concept themselves. Give a simple household experiment they can try RIGHT NOW. Keep it fun and motivating. Max 200 words.`
 
-  const response = await ollama.chat({
-    model: selectedModel,
-    messages: [
-      { role: 'system', content: locale === 'nl' ? PHYSICS_TUTOR_SYSTEM_NL : PHYSICS_TUTOR_SYSTEM_EN },
-      { role: 'user', content: prompt },
-    ],
+  const res = await fetch(`${API_BASE}/chat/completions`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({
+      model: selectedModel,
+      messages: [
+        { role: 'system', content: locale === 'nl' ? PHYSICS_TUTOR_SYSTEM_NL : PHYSICS_TUTOR_SYSTEM_EN },
+        { role: 'user', content: prompt },
+      ],
+    }),
   })
-
-  return response.message.content
+  if (!res.ok) throw new Error(`API error: ${res.status}`)
+  const data = await res.json()
+  return data.choices?.[0]?.message?.content || ''
 }

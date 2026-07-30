@@ -1,21 +1,18 @@
-import OpenAI from 'openai'
 import { storage } from '../utils/storage'
 
 const HIVE_SERVER_URL = import.meta.env.VITE_HIVE_SERVER_URL || 'http://localhost:8081'
-const HIVE_API_KEY = import.meta.env.VITE_HIVE_API_KEY || ''
+const API_BASE = `${HIVE_SERVER_URL}/v1`
 
-const openai = new OpenAI({
-  baseURL: `${HIVE_SERVER_URL}/v1`,
-  apiKey: HIVE_API_KEY || 'sk-placeholder',
-  dangerouslyAllowBrowser: true,
-})
+const headers = { 'Content-Type': 'application/json' }
 
 let availableModels = []
 
 export async function checkConnection() {
   try {
-    const res = await openai.models.list()
-    availableModels = (res.data || []).map(m => ({ name: m.id }))
+    const res = await fetch(`${API_BASE}/models`, { headers })
+    if (!res.ok) throw new Error(res.statusText)
+    const data = await res.json()
+    availableModels = (data.data || []).map(m => ({ name: m.id }))
     return true
   } catch {
     availableModels = []
@@ -130,11 +127,32 @@ function getPrompts(locale) {
   return locale === 'nl' ? PROMPTS_NL : PROMPTS_EN
 }
 
-async function* streamToOllamaFormat(openaiStream) {
-  for await (const chunk of openaiStream) {
-    const content = chunk.choices[0]?.delta?.content || ''
-    if (content) {
-      yield { message: { content } }
+async function* chatStream(body) {
+  const res = await fetch(`${API_BASE}/chat/completions`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify(body),
+  })
+  if (!res.ok) throw new Error(`API error: ${res.status}`)
+  const reader = res.body.getReader()
+  const decoder = new TextDecoder()
+  let buffer = ''
+  while (true) {
+    const { done, value } = await reader.read()
+    if (done) break
+    buffer += decoder.decode(value, { stream: true })
+    const lines = buffer.split('\n')
+    buffer = lines.pop() || ''
+    for (const line of lines) {
+      if (line.startsWith('data: ')) {
+        const data = line.slice(6)
+        if (data === '[DONE]') return
+        try {
+          const parsed = JSON.parse(data)
+          const content = parsed.choices?.[0]?.delta?.content || ''
+          if (content) yield { message: { content } }
+        } catch { /* skip malformed chunk */ }
+      }
     }
   }
 }
@@ -144,7 +162,7 @@ export async function sendMessage(messages, topic, model, locale = 'en') {
   const systemPrompt = prompts[topic] || prompts.science
   const selectedModel = model || getDefaultModel()
 
-  const stream = await openai.chat.completions.create({
+  return chatStream({
     model: selectedModel,
     messages: [
       { role: 'system', content: systemPrompt },
@@ -152,8 +170,16 @@ export async function sendMessage(messages, topic, model, locale = 'en') {
     ],
     stream: true,
   })
+}
 
-  return streamToOllamaFormat(stream)
+async function chatCompletion(body) {
+  const res = await fetch(`${API_BASE}/chat/completions`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify(body),
+  })
+  if (!res.ok) throw new Error(`API error: ${res.status}`)
+  return res.json()
 }
 
 export async function generateQuiz(topic, model, locale = 'en') {
@@ -165,7 +191,7 @@ export async function generateQuiz(topic, model, locale = 'en') {
     ? `Genereer een leuke quiz over ${topicNames[topic] || topic} voor nieuwsgierige kinderen. Onthoud: ALLEEN de JSON-array, niets anders.`
     : `Generate a fun quiz about ${topicNames[topic] || topic} for curious kids. Remember: ONLY the JSON array, nothing else.`
 
-  const response = await openai.chat.completions.create({
+  const data = await chatCompletion({
     model: selectedModel,
     messages: [
       { role: 'system', content: prompts.quiz },
@@ -173,7 +199,7 @@ export async function generateQuiz(topic, model, locale = 'en') {
     ],
   })
 
-  let content = (response.choices[0]?.message?.content || '').trim()
+  let content = (data.choices?.[0]?.message?.content || '').trim()
   const jsonMatch = content.match(/\[[\s\S]*\]/)
   if (jsonMatch) content = jsonMatch[0]
 
@@ -325,7 +351,7 @@ export async function verifyChartAnalysis({ chartType, independentVar, dependent
   `
 
   try {
-    const response = await openai.chat.completions.create({
+    const data = await chatCompletion({
       model: selectedModel,
       messages: [
         { role: 'system', content: systemPrompt },
@@ -335,7 +361,7 @@ export async function verifyChartAnalysis({ chartType, independentVar, dependent
       temperature: 0.1,
     })
 
-    return JSON.parse(response.choices[0].message.content)
+    return JSON.parse(data.choices?.[0]?.message?.content || '{}')
   } catch {
     return {
       chart_type_valid: true,
@@ -367,7 +393,7 @@ export async function generateDebateResponse({ dataset, studentFlaws, model, loc
   `
 
   try {
-    const response = await openai.chat.completions.create({
+    const data = await chatCompletion({
       model: selectedModel,
       messages: [
         { role: 'system', content: systemPrompt },
@@ -377,7 +403,7 @@ export async function generateDebateResponse({ dataset, studentFlaws, model, loc
       temperature: 0.3,
     })
 
-    return JSON.parse(response.choices[0].message.content)
+    return JSON.parse(data.choices?.[0]?.message?.content || '{}')
   } catch {
     return {
       response: locale === 'nl'

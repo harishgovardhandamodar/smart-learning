@@ -3,3 +3,11 @@ services:
     build: .
     ports:
       - "14101:80"
+    extra_hosts:
+      - "hive-server:host-gateway"
+    networks:
+      - smart-net
+
+networks:
+  smart-net:
+    driver: bridge
