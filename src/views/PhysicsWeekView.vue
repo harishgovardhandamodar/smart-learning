@@ -41,6 +41,47 @@
     </header>
 
     <div class="pw-body">
+      <div class="pw-tutor">
+        <div class="tutor-header">
+          <h3>🦊 {{ t('physics.tutorTitle') }}</h3>
+          <span class="tutor-status" :class="{ online: tutorOnline }">
+            {{ tutorOnline ? t('physics.tutorOnline') : t('physics.tutorOffline') }}
+          </span>
+        </div>
+
+        <div class="tutor-messages" ref="messagesContainer">
+          <div v-for="(msg, i) in tutorMessages" :key="i" class="tutor-msg" :class="msg.role">
+            <div class="msg-avatar">{{ msg.role === 'user' ? '🧑' : '🦊' }}</div>
+            <div class="msg-content" v-html="msg.content"></div>
+          </div>
+          <div v-if="tutorLoading" class="tutor-msg assistant">
+            <div class="msg-avatar">🦊</div>
+            <div class="msg-content typing">
+              <span></span><span></span><span></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="tutor-input-area">
+          <div class="quick-prompts">
+            <button v-for="(prompt, i) in quickPrompts" :key="i" class="quick-prompt" @click="sendQuickPrompt(prompt)">
+              {{ prompt }}
+            </button>
+          </div>
+          <div class="input-row">
+            <input
+              v-model="userInput"
+              :placeholder="t('physics.tutorPlaceholder')"
+              @keydown.enter="sendMessage"
+              :disabled="tutorLoading || !tutorOnline"
+            />
+            <button class="send-btn" @click="sendMessage" :disabled="!userInput.trim() || tutorLoading || !tutorOnline">
+              {{ tutorLoading ? '⏳' : '→' }}
+            </button>
+          </div>
+        </div>
+      </div>
+
       <div class="pw-curriculum">
         <div v-if="!genLoading && !aiData && mode === 'original'" class="generate-banner">
           <div class="gen-icon">🤖</div>
@@ -142,47 +183,6 @@
             <ul>
               <li v-for="(q, qi) in day.reflection" :key="qi">{{ q }}</li>
             </ul>
-          </div>
-        </div>
-      </div>
-
-      <div class="pw-tutor">
-        <div class="tutor-header">
-          <h3>🦊 {{ t('physics.tutorTitle') }}</h3>
-          <span class="tutor-status" :class="{ online: tutorOnline }">
-            {{ tutorOnline ? t('physics.tutorOnline') : t('physics.tutorOffline') }}
-          </span>
-        </div>
-
-        <div class="tutor-messages" ref="messagesContainer">
-          <div v-for="(msg, i) in tutorMessages" :key="i" class="tutor-msg" :class="msg.role">
-            <div class="msg-avatar">{{ msg.role === 'user' ? '🧑' : '🦊' }}</div>
-            <div class="msg-content" v-html="msg.content"></div>
-          </div>
-          <div v-if="tutorLoading" class="tutor-msg assistant">
-            <div class="msg-avatar">🦊</div>
-            <div class="msg-content typing">
-              <span></span><span></span><span></span>
-            </div>
-          </div>
-        </div>
-
-        <div class="tutor-input-area">
-          <div class="quick-prompts">
-            <button v-for="(prompt, i) in quickPrompts" :key="i" class="quick-prompt" @click="sendQuickPrompt(prompt)">
-              {{ prompt }}
-            </button>
-          </div>
-          <div class="input-row">
-            <input
-              v-model="userInput"
-              :placeholder="t('physics.tutorPlaceholder')"
-              @keydown.enter="sendMessage"
-              :disabled="tutorLoading || !tutorOnline"
-            />
-            <button class="send-btn" @click="sendMessage" :disabled="!userInput.trim() || tutorLoading || !tutorOnline">
-              {{ tutorLoading ? '⏳' : '→' }}
-            </button>
           </div>
         </div>
       </div>
@@ -545,9 +545,9 @@ onMounted(async () => {
 .pw-body {
   display: grid;
   gap: 1.5rem;
-  grid-template-columns: 1fr 380px;
+  grid-template-columns: 420px 1fr;
 }
-@media (max-width: 800px) {
+@media (max-width: 900px) {
   .pw-body { grid-template-columns: 1fr; }
 }
 
