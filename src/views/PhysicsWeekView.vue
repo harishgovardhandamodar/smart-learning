@@ -748,9 +748,9 @@ onMounted(async () => {
 }
 .tutor-status {
   font-size: 0.75rem;
-  color: var(--text-secondary, #94a3b8);
+  color: var(--text-light);
 }
-.tutor-status.online { color: #10b981; }
+.tutor-status.online { color: var(--success); }
 
 .tutor-messages {
   flex: 1;
@@ -788,7 +788,7 @@ onMounted(async () => {
   padding: 0.6rem 0.85rem;
   font-size: 0.82rem;
   line-height: 1.45;
-  color: var(--text-secondary, #334155);
+  color: var(--text);
   max-width: 85%;
   white-space: pre-line;
 }
