@@ -2,25 +2,117 @@
   <div class="physics-week" v-if="kidId">
     <header class="pw-header">
       <div class="pw-header-top">
-        <router-link to="/engine" class="back-link">← {{ t('adaptive.title') }}</router-link>
-        <h1>🔬 {{ t('physics.week1Title') }}</h1>
-        <p class="pw-subtitle">{{ t('physics.week1Subtitle') }}</p>
+        <router-link to="/engine" class="back-link">← {{ mode === 'ai' ? t('physics.backToEngine') : t('adaptive.title') }}</router-link>
+        <h1>🔬 {{ mode === 'ai' ? displayTitle : t('physics.week1Title') }}</h1>
+        <p class="pw-subtitle">{{ mode === 'ai' ? displaySubtitle : t('physics.week1Subtitle') }}</p>
       </div>
-      <div class="day-tabs">
-        <button v-for="day in days" :key="day.id" class="day-tab" :class="{ active: activeDay === day.id }" @click="activeDay = day.id">
-          <span class="day-num">{{ day.id }}</span>
-          <span class="day-label">{{ day.label }}</span>
-        </button>
+
+      <div class="pw-controls">
+        <div class="mode-toggle">
+          <button :class="{ active: mode === 'original' }" @click="mode = 'original'; activeDay = 1">📚 {{ t('physics.original') }}</button>
+          <button v-if="aiData" :class="{ active: mode === 'ai' }" @click="mode = 'ai'; activeWeek = 1; activeDay = 1">🤖 {{ t('physics.aiDeepDive') }}</button>
+        </div>
+
+        <div class="week-tabs" v-if="mode === 'ai' && aiData">
+          <button
+            v-for="w in aiData.weeks"
+            :key="w.week"
+            class="week-tab"
+            :class="{ active: activeWeek === w.week }"
+            @click="activeWeek = w.week; activeDay = 1"
+          >
+            <span class="week-num">{{ t('physics.week') }} {{ w.week }}</span>
+          </button>
+        </div>
+
+        <div class="day-tabs">
+          <button
+            v-for="d in dayTabs"
+            :key="d.id"
+            class="day-tab"
+            :class="{ active: activeDay === d.id }"
+            @click="activeDay = d.id"
+          >
+            <span class="day-num">{{ d.id }}</span>
+            <span class="day-label">{{ d.label }}</span>
+          </button>
+        </div>
       </div>
     </header>
 
     <div class="pw-body">
       <div class="pw-curriculum">
-        <div class="day-card" v-for="day in parsedDays" :key="day.id" v-show="activeDay === day.id || activeDay === 'all'">
+        <div v-if="!generating && !aiData && mode === 'original'" class="generate-banner">
+          <div class="gen-icon">🤖</div>
+          <h2>{{ t('physics.genTitle') }}</h2>
+          <p>{{ t('physics.genDesc') }}</p>
+          <div class="gen-form">
+            <select v-model="genModel" class="gen-select">
+              <optgroup :label="t('physics.genModelLabel')">
+                <option v-for="m in availableModels" :key="m.name" :value="m.name">{{ m.name }}</option>
+              </optgroup>
+            </select>
+            <button class="gen-btn" @click="generate" :disabled="genLoading">
+              {{ genLoading ? t('physics.genLoading') : t('physics.genButton') }}
+            </button>
+          </div>
+          <button v-if="aiData" class="gen-btn secondary" @click="mode = 'ai'; activeWeek = 1; activeDay = 1">
+            {{ t('physics.viewGenerated') }}
+          </button>
+        </div>
+
+        <div v-if="genLoading" class="gen-progress">
+          <span class="loading-spinner large"></span>
+          <p>{{ t('physics.genProgress') }}</p>
+          <p class="gen-hint">{{ t('physics.genHint') }}</p>
+        </div>
+
+        <div v-if="genError" class="gen-error">
+          <p>⚠️ {{ genError }}</p>
+          <button class="gen-btn" @click="genError = ''; genLoading = false">{{ t('physics.tryAgain') }}</button>
+        </div>
+
+        <div class="day-card" v-for="day in currentDays" :key="day.day" v-show="mode === 'ai' && aiData && activeDay === day.day">
           <div class="day-card-header">
-            <span class="day-badge" :class="day.stage">Stage {{ day.stageNum }}</span>
             <h2>{{ day.title }}</h2>
             <span class="day-focus">{{ day.focus }}</span>
+          </div>
+
+          <div class="day-sections">
+            <div class="section">
+              <h3>🌅 {{ t('physics.morning') }}</h3>
+              <div class="section-content" v-html="renderText(day.morning)"></div>
+            </div>
+            <div class="section">
+              <h3>🔬 {{ t('physics.midday') }}</h3>
+              <div class="section-content" v-html="renderText(day.midday)"></div>
+            </div>
+            <div class="section">
+              <h3>🌙 {{ t('physics.evening') }}</h3>
+              <div class="section-content" v-html="renderText(day.evening)"></div>
+            </div>
+          </div>
+
+          <div class="day-materials" v-if="day.materials && day.materials.length">
+            <h3>📦 {{ t('physics.materials') }}</h3>
+            <ul>
+              <li v-for="(item, i) in day.materials" :key="i">{{ item }}</li>
+            </ul>
+          </div>
+
+          <div class="day-reflection" v-if="day.questions && day.questions.length">
+            <h3>💭 {{ t('physics.reflectionQuestions') }}</h3>
+            <ul>
+              <li v-for="(q, qi) in day.questions" :key="qi">{{ q }}</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="day-card original" v-for="day in originalDays" :key="day.id" v-show="mode === 'original' && activeDay === day.id">
+          <div class="day-card-header">
+            <span class="day-badge" :class="day.stage">{{ t('physics.stage') }} {{ day.stageNum }}</span>
+            <h2>{{ day.title }}</h2>
+            <span class="day-focus" v-if="day.focus">{{ day.focus }}</span>
           </div>
 
           <div class="day-sections">
@@ -108,20 +200,35 @@
 import { ref, computed, onMounted, nextTick, inject } from 'vue'
 import { PHYSICS_WEEK1 } from '../data/physicsCurriculum'
 import { sendPhysicsMessage } from '../services/physicsTutor'
-import { checkConnection } from '../services/ollama'
+import { checkConnection, getDefaultModel, getModels } from '../services/ollama'
+import {
+  generatePhysicsDeepDive,
+  loadPhysicsDeepDive,
+  hasPhysicsDeepDive,
+  clearPhysicsDeepDive,
+} from '../services/physicsGenerator'
 
 const t = inject('t')
 const selectedKidId = inject('selectedKidId')
+const locale = inject('locale')
 const kidId = computed(() => selectedKidId?.value)
 
 const activeDay = ref(1)
+const activeWeek = ref(1)
+const mode = ref('original')
 const userInput = ref('')
 const tutorMessages = ref([])
 const tutorLoading = ref(false)
 const tutorOnline = ref(false)
 const messagesContainer = ref(null)
+const genLoading = ref(false)
+const genError = ref('')
+const genModel = ref('')
+const availableModels = ref([])
 
-const days = [
+const aiData = ref(null)
+
+const dayTabs = [
   { id: 1, label: t('physics.day1') },
   { id: 2, label: t('physics.day2') },
   { id: 3, label: t('physics.day3') },
@@ -137,102 +244,53 @@ const quickPrompts = computed(() => [
   t('physics.quickQuiz'),
 ])
 
-const parsedDays = computed(() => {
+const displayTitle = computed(() => {
+  if (!aiData.value) return ''
+  const w = aiData.value.weeks.find(w => w.week === activeWeek.value)
+  return w ? `🔬 ${w.title}` : ''
+})
+
+const displaySubtitle = computed(() => {
+  if (!aiData.value) return ''
+  const w = aiData.value.weeks.find(w => w.week === activeWeek.value)
+  return w ? w.subtitle : ''
+})
+
+const currentDays = computed(() => {
+  if (!aiData.value) return []
+  const w = aiData.value.weeks.find(w => w.week === activeWeek.value)
+  return w ? w.days || [] : []
+})
+
+const originalDays = computed(() => {
   const text = PHYSICS_WEEK1.en
   const stageBlocks = text.split(/### 🛠️/)
-  const overview = stageBlocks[0]
   const stage1 = stageBlocks[1] || ''
   const stage2 = stageBlocks[2] || ''
   const stage3 = stageBlocks[3] || ''
 
-  const dayParsers = [
-    { id: 1, stage: 'explore', stageNum: 1, sections: parseStageDays(stage1, [1]) },
-    { id: 2, stage: 'explore', stageNum: 1, sections: parseStageDays(stage1, [2]) },
-    { id: 3, stage: 'explore', stageNum: 1, sections: parseStageDays(stage1, [3]) },
-    { id: 4, stage: 'manipulate', stageNum: 2, sections: parseManipulationDays(stage2, 4) },
-    { id: 5, stage: 'manipulate', stageNum: 2, sections: parseManipulationDays(stage2, 5) },
-    { id: 6, stage: 'mastery', stageNum: 3, sections: parseMasteryDays(stage3, 6) },
-    { id: 7, stage: 'mastery', stageNum: 3, sections: parseMasteryDays(stage3, 7) },
+  return [
+    { id: 1, stage: 'explore', stageNum: 1, ...parseDay(stage1, [1]) },
+    { id: 2, stage: 'explore', stageNum: 1, ...parseDay(stage1, [2]) },
+    { id: 3, stage: 'explore', stageNum: 1, ...parseDay(stage1, [3]) },
+    { id: 4, stage: 'manipulate', stageNum: 2, ...parseManipulationDay(stage2, 4) },
+    { id: 5, stage: 'manipulate', stageNum: 2, ...parseManipulationDay(stage2, 5) },
+    { id: 6, stage: 'mastery', stageNum: 3, ...parseMasteryDay(stage3, 6) },
+    { id: 7, stage: 'mastery', stageNum: 3, ...parseMasteryDay(stage3, 7) },
   ]
-
-  return dayParsers
 })
 
-function parseStageDays(block, dayNums) {
+function parseDay(block, dayNums) {
+  const sections = []
   const dayHeader = new RegExp(`\\*\\*Day ${dayNums[0]}\\s*[—–-]`, 'i')
   const nextDay = new RegExp(`\\*\\*Day ${dayNums[0] + 1}\\s*[—–-]`, 'i')
-
-  const sections = []
   const lines = block.split('\n')
   let inDay = false
-  let currentSection = null
 
   for (const line of lines) {
     if (dayHeader.test(line)) inDay = true
     if (nextDay.test(line)) break
     if (!inDay) continue
-
-    const boldMatch = line.match(/\*\*(.+?)\*\*/)
-    if (boldMatch) {
-      const heading = boldMatch[1]
-      if (heading.startsWith('Day')) {
-        sections.push({ heading: `📌 ${heading}`, content: '' })
-      } else if (heading.includes('Focus:') || heading.includes('Morning') || heading.includes('Midday') || heading.includes('Evening')) {
-        sections.push({ heading, content: '' })
-      } else {
-        sections.push({ heading, content: '' })
-      }
-    } else if (sections.length > 0 && line.trim()) {
-      sections[sections.length - 1].content += line.trim() + '\n'
-    }
-  }
-
-  const title = sections.length > 0 ? sections[0].heading.replace(/[📌*]/g, '').trim() : `Day ${dayNums[0]}`
-  const focus = sections.find(s => s.heading.includes('Focus'))?.content.trim() || ''
-
-  return [{ heading: `Day ${dayNums[0]}: ${title.split('—')[1]?.trim() || title}`, content: focus || sections.map(s => s.content.trim()).filter(Boolean).join('\n\n') }]
-}
-
-function parseManipulationDays(block, dayNum) {
-  const sections = []
-  const dayPattern = new RegExp(`\\*\\*Day ${dayNum}`, 'i')
-  const nextDayPattern = new RegExp(`\\*\\*Day ${dayNum + 1}`, 'i')
-  const stageEnd = /### 🛠️ STAGE 3/
-
-  const lines = block.split('\n')
-  let inDay = false
-  let currentSection = null
-
-  for (const line of lines) {
-    if (dayPattern.test(line)) inDay = true
-    if (nextDayPattern.test(line) || stageEnd.test(line)) break
-    if (!inDay) continue
-
-    const boldMatch = line.match(/\*\*(.+?)\*\*/)
-    if (boldMatch) {
-      const heading = boldMatch[1]
-      sections.push({ heading, content: '' })
-    } else if (sections.length > 0 && line.trim()) {
-      sections[sections.length - 1].content += line.trim() + '\n'
-    }
-  }
-
-  return sections
-}
-
-function parseMasteryDays(block, dayNum) {
-  const sections = []
-  const dayPattern = new RegExp(`\\*\\*Day ${dayNum}`, 'i')
-  const nextDay = dayNum === 6 ? /\*\*Day 7/ : /Reflection/
-
-  const lines = block.split('\n')
-  let inDay = false
-
-  for (const line of lines) {
-    if (dayPattern.test(line)) inDay = true
-    if (nextDay.test(line) && dayNum === 6) break
-    if (!inDay) continue
-
     const boldMatch = line.match(/\*\*(.+?)\*\*/)
     if (boldMatch) {
       sections.push({ heading: boldMatch[1], content: '' })
@@ -241,7 +299,81 @@ function parseMasteryDays(block, dayNum) {
     }
   }
 
-  return sections
+  const title = sections.length > 0 ? sections[0].heading.replace(/\*\*/g, '').trim() : `Day ${dayNums[0]}`
+  const focus = sections.find(s => s.heading.includes('Focus'))?.content.trim() || ''
+  return { title: title.split('—')[1]?.trim() || title, focus, sections }
+}
+
+function parseManipulationDay(block, dayNum) {
+  const sections = []
+  const dayPattern = new RegExp(`\\*\\*Day ${dayNum}`, 'i')
+  const nextDayPattern = new RegExp(`\\*\\*Day ${dayNum + 1}`, 'i')
+  const stageEnd = /### 🛠️ STAGE 3/
+  const lines = block.split('\n')
+  let inDay = false
+
+  for (const line of lines) {
+    if (dayPattern.test(line)) inDay = true
+    if (nextDayPattern.test(line) || stageEnd.test(line)) break
+    if (!inDay) continue
+    const boldMatch = line.match(/\*\*(.+?)\*\*/)
+    if (boldMatch) {
+      sections.push({ heading: boldMatch[1], content: '' })
+    } else if (sections.length > 0 && line.trim()) {
+      sections[sections.length - 1].content += line.trim() + '\n'
+    }
+  }
+
+  const title = sections.length > 0 ? sections[0].heading.replace(/\*\*/g, '').trim() : `Day ${dayNum}`
+  return { title, focus: '', sections, challenge: null }
+}
+
+function parseMasteryDay(block, dayNum) {
+  const sections = []
+  const dayPattern = new RegExp(`\\*\\*Day ${dayNum}`, 'i')
+  const nextDay = dayNum === 6 ? /\*\*Day 7/ : /Reflection/
+  const lines = block.split('\n')
+  let inDay = false
+
+  for (const line of lines) {
+    if (dayPattern.test(line)) inDay = true
+    if (nextDay.test(line) && dayNum === 6) break
+    if (!inDay) continue
+    const boldMatch = line.match(/\*\*(.+?)\*\*/)
+    if (boldMatch) {
+      sections.push({ heading: boldMatch[1], content: '' })
+    } else if (sections.length > 0 && line.trim()) {
+      sections[sections.length - 1].content += line.trim() + '\n'
+    }
+  }
+
+  const title = sections.length > 0 ? sections[0].heading.replace(/\*\*/g, '').trim() : `Day ${dayNum}`
+  return { title, focus: '', sections, challenge: null }
+}
+
+function renderText(text) {
+  if (!text) return ''
+  return text
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.*?)\*!/g, '<em>$1</em>')
+    .replace(/\n/g, '<br>')
+}
+
+async function generate() {
+  genLoading.value = true
+  genError.value = ''
+  try {
+    const result = await generatePhysicsDeepDive(locale.value, genModel.value)
+    aiData.value = result
+    mode.value = 'ai'
+    activeWeek.value = 1
+    activeDay.value = 1
+  } catch (err) {
+    genError.value = err.message || String(err)
+  } finally {
+    genLoading.value = false
+  }
 }
 
 async function sendMessage() {
@@ -255,14 +387,12 @@ async function sendMessage() {
   scrollMessages()
 
   try {
-    const messages = tutorMessages.value.map(m => ({
+    const msgs = tutorMessages.value.map(m => ({
       role: m.role === 'user' ? 'user' : 'assistant',
       content: m.content,
     }))
-
-    const stream = await sendPhysicsMessage(messages, null, 'en')
+    const stream = await sendPhysicsMessage(msgs, null, 'en')
     let fullResponse = ''
-
     for await (const chunk of stream) {
       fullResponse += chunk.message.content
       const last = tutorMessages.value[tutorMessages.value.length - 1]
@@ -274,16 +404,10 @@ async function sendMessage() {
       await nextTick()
       scrollMessages()
     }
-
     const last = tutorMessages.value[tutorMessages.value.length - 1]
-    if (last && last.streaming) {
-      last.streaming = false
-    }
+    if (last && last.streaming) last.streaming = false
   } catch {
-    tutorMessages.value.push({
-      role: 'assistant',
-      content: t('physics.tutorError'),
-    })
+    tutorMessages.value.push({ role: 'assistant', content: t('physics.tutorError') })
   } finally {
     tutorLoading.value = false
   }
@@ -302,11 +426,16 @@ function scrollMessages() {
 
 onMounted(async () => {
   tutorOnline.value = await checkConnection()
+  availableModels.value = getModels()
+  genModel.value = getDefaultModel() || 'nemotron-3-super:latest'
+
   if (tutorOnline.value) {
-    tutorMessages.value.push({
-      role: 'assistant',
-      content: t('physics.tutorWelcome'),
-    })
+    tutorMessages.value.push({ role: 'assistant', content: t('physics.tutorWelcome') })
+  }
+
+  if (hasPhysicsDeepDive()) {
+    aiData.value = loadPhysicsDeepDive()
+    if (!aiData.value) clearPhysicsDeepDive()
   }
 })
 </script>
@@ -343,7 +472,38 @@ onMounted(async () => {
   margin: 0;
 }
 
-.day-tabs {
+.pw-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.mode-toggle {
+  display: flex;
+  gap: 0.25rem;
+  background: var(--chip-bg, #f1f5f9);
+  padding: 0.25rem;
+  border-radius: 10px;
+  width: fit-content;
+}
+.mode-toggle button {
+  padding: 0.4rem 1rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  background: transparent;
+  color: var(--text-secondary, #64748b);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.mode-toggle button.active {
+  background: var(--bg-card);
+  color: var(--text);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+.week-tabs, .day-tabs {
   display: flex;
   gap: 0.25rem;
   background: var(--chip-bg, #f1f5f9);
@@ -351,10 +511,9 @@ onMounted(async () => {
   border-radius: 10px;
   overflow-x: auto;
 }
-
-.day-tab {
+.week-tab, .day-tab {
   flex: 1;
-  min-width: 70px;
+  min-width: 60px;
   padding: 0.5rem 0.5rem;
   border: none;
   background: transparent;
@@ -368,13 +527,13 @@ onMounted(async () => {
   align-items: center;
   gap: 0.15rem;
 }
-.day-tab.active {
+.week-tab.active, .day-tab.active {
   background: var(--bg-card);
   color: var(--text);
   font-weight: 600;
   box-shadow: 0 1px 3px rgba(0,0,0,0.08);
 }
-.day-num {
+.week-num, .day-num {
   font-size: 1rem;
   font-weight: 700;
   color: var(--primary, #6C5CE7);
@@ -406,9 +565,7 @@ onMounted(async () => {
   box-shadow: var(--shadow);
 }
 
-.day-card-header {
-  margin-bottom: 1rem;
-}
+.day-card-header { margin-bottom: 1rem; }
 .day-card-header h2 {
   font-size: 1.15rem;
   font-weight: 700;
@@ -440,7 +597,6 @@ onMounted(async () => {
   gap: 0.75rem;
   margin-bottom: 1rem;
 }
-
 .section h3 {
   font-size: 0.85rem;
   font-weight: 600;
@@ -454,32 +610,27 @@ onMounted(async () => {
   white-space: pre-line;
 }
 
-.day-challenge, .day-project, .day-exhibition {
+.day-materials, .day-challenge, .day-project, .day-exhibition, .day-reflection {
   background: var(--chip-bg, #f8fafc);
   border-radius: 8px;
   padding: 1rem;
   margin-bottom: 0.75rem;
 }
-.day-challenge h3, .day-project h3, .day-exhibition h3 {
+.day-materials h3, .day-challenge h3, .day-project h3, .day-exhibition h3, .day-reflection h3 {
   font-size: 0.9rem;
   font-weight: 600;
   color: var(--text);
   margin: 0 0 0.5rem;
 }
-.day-challenge .challenge-content,
-.day-project p, .day-exhibition p {
+.day-materials ul {
+  margin: 0;
+  padding-left: 1.25rem;
+}
+.day-materials li {
   font-size: 0.85rem;
   color: var(--text-secondary, #475569);
   line-height: 1.5;
-  margin: 0;
-  white-space: pre-line;
-}
-
-.day-reflection h3 {
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: var(--text);
-  margin: 0 0 0.5rem;
+  margin-bottom: 0.25rem;
 }
 .day-reflection ul {
   margin: 0;
@@ -490,6 +641,85 @@ onMounted(async () => {
   color: var(--text-secondary, #475569);
   line-height: 1.5;
   margin-bottom: 0.35rem;
+}
+.challenge-content, .day-project p, .day-exhibition p {
+  font-size: 0.85rem;
+  color: var(--text-secondary, #475569);
+  line-height: 1.5;
+  margin: 0;
+  white-space: pre-line;
+}
+
+.generate-banner {
+  background: linear-gradient(135deg, #667eea22, #764ba222);
+  border: 2px dashed var(--primary, #6C5CE7);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  text-align: center;
+}
+.gen-icon { font-size: 3rem; margin-bottom: 0.5rem; }
+.generate-banner h2 { margin: 0 0 0.5rem; color: var(--text); }
+.generate-banner p { color: var(--text-secondary, #64748b); margin: 0 0 1rem; font-size: 0.9rem; }
+.gen-form {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.gen-select {
+  padding: 0.5rem 0.75rem;
+  border: 2px solid var(--border, #e2e8f0);
+  border-radius: 10px;
+  font-size: 0.85rem;
+  background: var(--input-bg);
+  color: var(--text);
+  outline: none;
+  min-width: 200px;
+}
+.gen-btn {
+  padding: 0.5rem 1.25rem;
+  background: var(--primary, #6C5CE7);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.gen-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+.gen-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.gen-btn.secondary { background: var(--chip-bg, #f1f5f9); color: var(--primary, #6C5CE7); }
+
+.gen-progress {
+  text-align: center;
+  padding: 3rem 2rem;
+}
+.gen-progress p { color: var(--text-secondary, #64748b); }
+.gen-hint { font-size: 0.8rem; margin-top: 0.5rem; }
+
+.gen-error {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  text-align: center;
+}
+.gen-error p { color: #dc2626; margin: 0 0 1rem; }
+
+.loading-spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2.5px solid rgba(108, 92, 231, 0.15);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+.loading-spinner.large {
+  width: 32px;
+  height: 32px;
+  border-width: 3px;
 }
 
 .pw-tutor {
@@ -609,9 +839,7 @@ onMounted(async () => {
   cursor: pointer;
   transition: all 0.2s;
 }
-.quick-prompt:hover {
-  background: var(--chip-bg, #f1f5f9);
-}
+.quick-prompt:hover { background: var(--chip-bg, #f1f5f9); }
 
 .input-row {
   display: flex;
@@ -627,12 +855,8 @@ onMounted(async () => {
   color: var(--text);
   outline: none;
 }
-.input-row input:focus {
-  border-color: var(--primary, #6C5CE7);
-}
-.input-row input:disabled {
-  opacity: 0.5;
-}
+.input-row input:focus { border-color: var(--primary, #6C5CE7); }
+.input-row input:disabled { opacity: 0.5; }
 
 .send-btn {
   padding: 0.55rem 0.85rem;
@@ -657,5 +881,8 @@ onMounted(async () => {
 @keyframes slide-up {
   from { opacity: 0; transform: translateY(16px); }
   to { opacity: 1; transform: translateY(0); }
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
 </style>
