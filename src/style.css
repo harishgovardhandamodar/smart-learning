@@ -11,6 +11,7 @@
   --bg-card: #FFFFFF;
   --bg-elevated: #FFFFFF;
   --text: #2D3436;
+  --text-secondary: #636E72;
   --text-light: #636E72;
   --text-muted: #B2BEC3;
   --border: rgba(108, 92, 231, 0.1);
@@ -41,6 +42,7 @@
   --bg-card: #232440;
   --bg-elevated: #2A2B4A;
   --text: #F0F1FA;
+  --text-secondary: #CDD0E6;
   --text-light: #CDD0E6;
   --text-muted: #9DA0BA;
   --border: rgba(162, 155, 254, 0.12);

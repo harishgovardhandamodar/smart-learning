@@ -573,7 +573,7 @@ onMounted(async () => {
 }
 .day-focus {
   font-size: 0.85rem;
-  color: var(--text-secondary, #64748b);
+  color: var(--text-light);
   font-style: italic;
 }
 
@@ -604,7 +604,7 @@ onMounted(async () => {
 }
 .section-content {
   font-size: 0.85rem;
-  color: var(--text-secondary, #475569);
+  color: var(--text);
   line-height: 1.5;
   white-space: pre-line;
 }
@@ -627,7 +627,7 @@ onMounted(async () => {
 }
 .day-materials li {
   font-size: 0.85rem;
-  color: var(--text-secondary, #475569);
+  color: var(--text);
   line-height: 1.5;
   margin-bottom: 0.25rem;
 }
@@ -637,13 +637,13 @@ onMounted(async () => {
 }
 .day-reflection li {
   font-size: 0.85rem;
-  color: var(--text-secondary, #475569);
+  color: var(--text);
   line-height: 1.5;
   margin-bottom: 0.35rem;
 }
 .challenge-content, .day-project p, .day-exhibition p {
   font-size: 0.85rem;
-  color: var(--text-secondary, #475569);
+  color: var(--text);
   line-height: 1.5;
   margin: 0;
   white-space: pre-line;
