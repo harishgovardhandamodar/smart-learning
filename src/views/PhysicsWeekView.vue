@@ -441,9 +441,9 @@ onMounted(async () => {
 
 <style scoped>
 .physics-week {
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
-  padding: 1rem;
+  padding: 1.5rem 24px;
   animation: slide-up 0.4s ease;
 }
 

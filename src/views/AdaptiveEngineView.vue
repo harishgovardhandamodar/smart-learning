@@ -149,7 +149,7 @@ onMounted(refresh)
 
 <style scoped>
 .adaptive-engine {
-  max-width: 1100px;
+  max-width: 1400px;
   margin: 0 auto;
   padding: 1rem;
   animation: slide-up 0.4s ease;
