@@ -52,7 +52,7 @@
         <div class="tutor-messages" ref="messagesContainer">
           <div v-for="(msg, i) in tutorMessages" :key="i" class="tutor-msg" :class="msg.role">
             <div class="msg-avatar">{{ msg.role === 'user' ? '🧑' : '🦊' }}</div>
-            <div class="msg-content" v-html="msg.content"></div>
+            <div class="msg-content" v-html="renderText(msg.content)"></div>
           </div>
           <div v-if="tutorLoading" class="tutor-msg assistant">
             <div class="msg-avatar">🦊</div>
@@ -357,7 +357,7 @@ function renderText(text) {
   return text
     .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
     .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-    .replace(/\*(.*?)\*!/g, '<em>$1</em>')
+    .replace(/\*(.*?)\*/g, '<em>$1</em>')
     .replace(/\n/g, '<br>')
 }
 
