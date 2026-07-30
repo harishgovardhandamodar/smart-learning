@@ -11,7 +11,7 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "ollama": "^0.6.3",
+    "openai": "^4.73.0",
     "vue": "^3.5.39",
     "vue-router": "^4.6.4"
   },

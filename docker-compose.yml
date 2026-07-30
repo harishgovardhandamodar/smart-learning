@@ -1,0 +1,5 @@
+services:
+  smart-learning:
+    build: .
+    ports:
+      - "14101:80"

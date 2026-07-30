@@ -1,14 +1,21 @@
-import { Ollama } from 'ollama'
+import OpenAI from 'openai'
 import { storage } from '../utils/storage'
 
-const ollama = new Ollama({ host: 'http://localhost:11434' })
+const HIVE_SERVER_URL = import.meta.env.VITE_HIVE_SERVER_URL || 'http://localhost:8081'
+const HIVE_API_KEY = import.meta.env.VITE_HIVE_API_KEY || ''
+
+const openai = new OpenAI({
+  baseURL: `${HIVE_SERVER_URL}/v1`,
+  apiKey: HIVE_API_KEY || 'sk-placeholder',
+  dangerouslyAllowBrowser: true,
+})
 
 let availableModels = []
 
 export async function checkConnection() {
   try {
-    const res = await ollama.list()
-    availableModels = res.models || []
+    const res = await openai.models.list()
+    availableModels = (res.data || []).map(m => ({ name: m.id }))
     return true
   } catch {
     availableModels = []
@@ -123,12 +130,21 @@ function getPrompts(locale) {
   return locale === 'nl' ? PROMPTS_NL : PROMPTS_EN
 }
 
+async function* streamToOllamaFormat(openaiStream) {
+  for await (const chunk of openaiStream) {
+    const content = chunk.choices[0]?.delta?.content || ''
+    if (content) {
+      yield { message: { content } }
+    }
+  }
+}
+
 export async function sendMessage(messages, topic, model, locale = 'en') {
   const prompts = getPrompts(locale)
   const systemPrompt = prompts[topic] || prompts.science
   const selectedModel = model || getDefaultModel()
 
-  const response = await ollama.chat({
+  const stream = await openai.chat.completions.create({
     model: selectedModel,
     messages: [
       { role: 'system', content: systemPrompt },
@@ -137,7 +153,7 @@ export async function sendMessage(messages, topic, model, locale = 'en') {
     stream: true,
   })
 
-  return response
+  return streamToOllamaFormat(stream)
 }
 
 export async function generateQuiz(topic, model, locale = 'en') {
@@ -149,7 +165,7 @@ export async function generateQuiz(topic, model, locale = 'en') {
     ? `Genereer een leuke quiz over ${topicNames[topic] || topic} voor nieuwsgierige kinderen. Onthoud: ALLEEN de JSON-array, niets anders.`
     : `Generate a fun quiz about ${topicNames[topic] || topic} for curious kids. Remember: ONLY the JSON array, nothing else.`
 
-  const response = await ollama.chat({
+  const response = await openai.chat.completions.create({
     model: selectedModel,
     messages: [
       { role: 'system', content: prompts.quiz },
@@ -157,7 +173,7 @@ export async function generateQuiz(topic, model, locale = 'en') {
     ],
   })
 
-  let content = response.message.content.trim()
+  let content = (response.choices[0]?.message?.content || '').trim()
   const jsonMatch = content.match(/\[[\s\S]*\]/)
   if (jsonMatch) content = jsonMatch[0]
 
@@ -309,17 +325,17 @@ export async function verifyChartAnalysis({ chartType, independentVar, dependent
   `
 
   try {
-    const response = await ollama.chat({
+    const response = await openai.chat.completions.create({
       model: selectedModel,
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: prompt },
       ],
-      format: 'json',
-      options: { temperature: 0.1 },
+      response_format: { type: 'json_object' },
+      temperature: 0.1,
     })
 
-    return JSON.parse(response.message.content)
+    return JSON.parse(response.choices[0].message.content)
   } catch {
     return {
       chart_type_valid: true,
@@ -351,17 +367,17 @@ export async function generateDebateResponse({ dataset, studentFlaws, model, loc
   `
 
   try {
-    const response = await ollama.chat({
+    const response = await openai.chat.completions.create({
       model: selectedModel,
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: prompt },
       ],
-      format: 'json',
-      options: { temperature: 0.3 },
+      response_format: { type: 'json_object' },
+      temperature: 0.3,
     })
 
-    return JSON.parse(response.message.content)
+    return JSON.parse(response.choices[0].message.content)
   } catch {
     return {
       response: locale === 'nl'
