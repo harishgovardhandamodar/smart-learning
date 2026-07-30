@@ -42,7 +42,7 @@
 
     <div class="pw-body">
       <div class="pw-curriculum">
-        <div v-if="!generating && !aiData && mode === 'original'" class="generate-banner">
+        <div v-if="!genLoading && !aiData && mode === 'original'" class="generate-banner">
           <div class="gen-icon">🤖</div>
           <h2>{{ t('physics.genTitle') }}</h2>
           <p>{{ t('physics.genDesc') }}</p>
